@@ -1,0 +1,3 @@
+<template>
+     <AdminAppLayout></AdminAppLayout>
+</template>

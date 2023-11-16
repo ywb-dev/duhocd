@@ -23,5 +23,5 @@ export default defineNuxtConfig({
           include: ['Button', 'speedDial', 'DataTable'],
       }
   },
-  css: ['~/assets/css/main.css', 'primevue/resources/themes/lara-light-teal/theme.css'],
+  css: ['~/assets/css/main.css', 'primevue/resources/themes/lara-light-teal/theme.css', 'primeicons/primeicons.css'],
 })

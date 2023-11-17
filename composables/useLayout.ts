@@ -34,20 +34,18 @@ export default function useLayout() {
     };
 
     const onMenuToggle = () => {
-        if (layoutConfig.menuMode === 'overlay') {
-            layoutState.overlayMenuActive = !layoutState.overlayMenuActive;
-        }
+        // if (layoutConfig.menuMode === 'overlay') {
+        //     layoutState.overlayMenuActive = !layoutState.overlayMenuActive;
+        // }
 
-        if (window.innerWidth > 991) {
+        if (window.innerWidth > 1023) {
             layoutState.staticMenuDesktopInactive = !layoutState.staticMenuDesktopInactive;
         } else {
             layoutState.staticMenuMobileActive = !layoutState.staticMenuMobileActive;
         }
     };
 
-    const isSidebarActive = computed(() => layoutState.overlayMenuActive || layoutState.staticMenuMobileActive);
-
     const isDarkTheme = computed(() => layoutConfig.darkTheme);
 
-    return { layoutConfig: toRefs(layoutConfig), layoutState: toRefs(layoutState), changeThemeSettings, setScale, onMenuToggle, isSidebarActive, isDarkTheme, setActiveMenuItem };
+    return { layoutConfig: toRefs(layoutConfig), layoutState: toRefs(layoutState), changeThemeSettings, setScale, onMenuToggle, isDarkTheme, setActiveMenuItem };
 }

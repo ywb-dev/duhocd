@@ -2,12 +2,12 @@
 const model = ref([
     {
         label: 'Home',
-        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/admin' }]
     },
     {
         label: 'UI Components',
         items: [
-            { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
+            { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/admin/profile' },
             { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
             { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', to: '/uikit/floatlabel' },
             { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', to: '/uikit/invalidstate' },
@@ -158,9 +158,10 @@ const model = ref([
         ]
     }
 ]);
+const activeSibar = useActive()  
 </script>
 <template>
-    <div class="layout-sidebar relative w-80 h-full max-h-[80vh] overflow-y-auto transition-all bg-white px-6 py-2 rounded-xl">
+    <div :class="activeSibar ? 'translate-x-0 lg:-translate-x-full lg:left-0' : '-translate-x-full lg:translate-x-0'" class="layout-sidebar fixed left-0 top-0 lg:top-auto lg:left-auto w-80 z-100 h-full lg:max-h-[80vh] z-[999] lg:z-10 overflow-y-auto transition-all duration-300 bg-[#fff] px-6 py-2 rounded-xl dark:bg-boxDarkMode">
         <ul class="layout-menu m-0 p-0">
             <template>
                 <ul class="layout-menu">
@@ -172,6 +173,7 @@ const model = ref([
             </template>
         </ul>
     </div>
+    <div @click="activeSibar = !activeSibar" :class="activeSibar ? 'fixed' : ''" class="overlay top-0 left-0 right-0 bottom-0 bg-red-400 z-10 bg-[#000] opacity-40 lg:hidden"></div>
 </template>
 <style scoped>
     .layout-sidebar {

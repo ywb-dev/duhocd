@@ -10,7 +10,12 @@ export default {
   ],
   theme: {
     extend: {},
+    colors: {
+      boxDarkMode: '#2a323d',
+      bgDarkMode: '#20262e',
+      hoverDarkMode: '#ffffffde',
+    }
   },
   plugins: [],
+  darkMode: 'class',
 }
-

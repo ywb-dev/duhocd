@@ -20,7 +20,7 @@ export default defineNuxtConfig({
         ripple: true,
       },
       components: {
-          include: ['Button', 'speedDial', 'DataTable'],
+          include: ['Button', 'InputSwitch', 'Menu', 'Sidebar'],
       }
   },
   css: ['~/assets/css/main.css', 'primevue/resources/themes/lara-light-teal/theme.css', 'primeicons/primeicons.css'],

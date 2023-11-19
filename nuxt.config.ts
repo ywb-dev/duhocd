@@ -12,16 +12,27 @@ export default defineNuxtConfig({
     '@': resolve(__dirname, "/"),
   },
   modules: [
-    'nuxt-primevue'
+    'nuxt-primevue',
+    '@vee-validate/nuxt'
   ],
   primevue: {
       usePrimeVue: true,
       options: {
-        ripple: true,
+        ripple: true
       },
       components: {
-          include: ['Button', 'InputSwitch', 'Menu', 'Sidebar'],
+         prefix: 'Prime',
+          include: ['Button', 'Password', 'InputSwitch', 'InputText', 'Menu', 'Sidebar', 'Toast'],
       }
   },
   css: ['~/assets/css/main.css', 'primevue/resources/themes/lara-light-teal/theme.css', 'primeicons/primeicons.css'],
+  veeValidate: {
+    autoImports: true,
+    componentNames: {
+      Form: 'VeeForm',
+      Field: 'VeeField',
+      FieldArray: 'VeeFieldArray',
+      ErrorMessage: 'VeeErrorMessage',
+    },
+  },
 })

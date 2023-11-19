@@ -14,6 +14,8 @@ export default {
       boxDarkMode: '#2a323d',
       bgDarkMode: '#20262e',
       hoverDarkMode: '#ffffffde',
+      black: '#000',
+      white: '#fff'
     }
   },
   plugins: [],

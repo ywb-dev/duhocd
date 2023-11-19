@@ -324,16 +324,6 @@
   dependencies:
     mime "^3.0.0"
 
-"@esbuild/win32-x64@0.18.20":
-  version "0.18.20"
-  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.18.20.tgz"
-  integrity sha512-kTdfRcSiDfQca/y9QIkng02avJ+NCaQvrMejlsB3RRv5sE9rRoeBPISaZpKxHELzRxZyLvNts1P27W3wV+8geQ==
-
-"@esbuild/win32-x64@0.19.5":
-  version "0.19.5"
-  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.19.5.tgz"
-  integrity sha512-czTrygUsB/jlM8qEW5MD8bgYU2Xg14lo6kBDXW6HdxKjh8M5PzETGiSHaz9MtbXBYDloHNUAUW2tMiKW4KM9Mw==
-
 "@fastify/busboy@^2.0.0":
   version "2.1.0"
   resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-2.1.0.tgz"
@@ -727,11 +717,6 @@
     micromatch "^4.0.5"
     napi-wasm "^1.1.0"
 
-"@parcel/watcher-win32-x64@2.3.0":
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/@parcel/watcher-win32-x64/-/watcher-win32-x64-2.3.0.tgz"
-  integrity sha512-dLx+0XRdMnVI62kU3wbXvbIRhLck4aE28bIGKbRGS7BJNt54IIj9+c/Dkqb+7DJEbHUZAX1bwaoM8PqVlHJmCA==
-
 "@parcel/watcher@^2.1.0", "@parcel/watcher@^2.3.0":
   version "2.3.0"
   resolved "https://registry.npmjs.org/@parcel/watcher/-/watcher-2.3.0.tgz"
@@ -1071,6 +1056,15 @@
     "@unhead/shared" "1.8.3"
     hookable "^5.5.3"
     unhead "1.8.3"
+
+"@vee-validate/nuxt@^4.11.8":
+  version "4.11.8"
+  resolved "https://registry.npmjs.org/@vee-validate/nuxt/-/nuxt-4.11.8.tgz"
+  integrity sha512-5wcL2jC/urOA5OMLXDB81kWt3mxRqmtanI+KobIP3Avw/JdpZczV6FML4FL/feWeX7RqTPuv9r7xMR9Mff67lw==
+  dependencies:
+    "@nuxt/kit" "^3.7.3"
+    local-pkg "^0.4.3"
+    vee-validate "4.11.8"
 
 "@vercel/nft@^0.24.3":
   version "0.24.3"
@@ -5378,6 +5372,11 @@ type-fest@^3.8.0:
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-3.13.1.tgz"
   integrity sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==
 
+type-fest@^4.3.1:
+  version "4.8.1"
+  resolved "https://registry.npmjs.org/type-fest/-/type-fest-4.8.1.tgz"
+  integrity sha512-ShaaYnjf+0etG8W/FumARKMjjIToy/haCaTjN2dvcewOSoNqCQzdgG7m2JVOlM5qndGTHjkvsrWZs+k/2Z7E0Q==
+
 type@^1.0.1:
   version "1.2.0"
   resolved "https://registry.npmjs.org/type/-/type-1.2.0.tgz"
@@ -5613,6 +5612,14 @@ validate-npm-package-name@^5.0.0:
   integrity sha512-YuKoXDAhBYxY7SfOKxHBDoSyENFeW5VvIIQp2TGQuit8gpK6MnWaQelBKxso72DoxTZfZdcP3W90LqpSkgPzLQ==
   dependencies:
     builtins "^5.0.0"
+
+vee-validate@4.11.8:
+  version "4.11.8"
+  resolved "https://registry.npmjs.org/vee-validate/-/vee-validate-4.11.8.tgz"
+  integrity sha512-ZuVpw0axWYBM3aVTD/bm94hcWHumqeUgNjptOqfBT0gyqyHaGYCrm0tSD/0bygEbWUDwEPJOQaEKaUGM82j8TQ==
+  dependencies:
+    "@vue/devtools-api" "^6.5.0"
+    type-fest "^4.3.1"
 
 vite-node@^0.33.0:
   version "0.33.0"

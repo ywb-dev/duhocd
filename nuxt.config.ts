@@ -22,7 +22,7 @@ export default defineNuxtConfig({
       },
       components: {
          prefix: 'Prime',
-          include: ['Button', 'Password', 'InputSwitch', 'InputText', 'Menu', 'Sidebar', 'Toast'],
+          include: ['Button', 'Password', 'InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast'],
       }
   },
   css: ['~/assets/css/main.css', 'primevue/resources/themes/lara-light-teal/theme.css', 'primeicons/primeicons.css'],

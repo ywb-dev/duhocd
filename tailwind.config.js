@@ -9,14 +9,16 @@ export default {
     "./error.vue",
   ],
   theme: {
-    extend: {},
-    colors: {
-      boxDarkMode: '#2a323d',
-      bgDarkMode: '#20262e',
-      hoverDarkMode: '#ffffffde',
-      black: '#000',
-      white: '#fff'
-    }
+    extend: {
+      colors: {
+        boxDarkMode: '#2a323d',
+        bgDarkMode: '#20262e',
+        hoverDarkMode: '#ffffffde',
+        'border-field': '#d1d5db',
+        primary: '#1B80CA',
+        primaryHover: '#035897'
+      }
+    },
   },
   plugins: [],
   darkMode: 'class',

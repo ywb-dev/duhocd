@@ -39,13 +39,13 @@
                     <form @submit="onSubmit" class="flex flex-col gap-2">
                         <div class="field flex flex-col">
                             <label class="text-sm" for="username">Username</label>
-                            <PrimeInputText id="username" class="border border-border-field rounded px-4 py-2.5 hover:border-primary text-sm text-black" v-model="username" type="text" :class="{ 'p-invalid': userErrorMessage }" aria-describedby="text-error" />
+                            <PrimeInputText id="username" class="border border-border-field w-full rounded px-4 py-2.5 hover:border-primary text-sm text-black" v-model="username" type="text" :class="{ 'p-invalid': userErrorMessage }" aria-describedby="text-error" />
                             <small class="p-error" id="text-error">{{ userErrorMessage || '&nbsp;' }}</small>
                         </div>
                         <div class="field flex flex-col">
                             <label class="text-sm" for="value">Password</label>
                             <PrimePassword :pt="{
-                                    input: { class: 'font-bold border border-border-field rounded px-4 py-2.5 text-sm text-black' },
+                                    input: { class: 'font-bold w-full border border-border-field rounded px-4 py-2.5 text-sm text-black' },
                                 }" id="value" v-model="value" type="text" :class="{ 'p-invalid': errorMessage }" aria-describedby="text-error" />
                             <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
                         </div>

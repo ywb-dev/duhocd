@@ -13,7 +13,8 @@ export default defineNuxtConfig({
   },
   modules: [
     'nuxt-primevue',
-    '@vee-validate/nuxt'
+    '@vee-validate/nuxt',
+    '@pinia/nuxt'
   ],
   primevue: {
       usePrimeVue: true,

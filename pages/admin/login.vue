@@ -3,7 +3,7 @@
         layout: 'custom'
     })
     import { useToast } from 'primevue/usetoast';
-    import { useUserStore } from '~~/stores/user';s
+    import { useUserStore } from '~~/stores/user';
     const { handleSubmit, resetForm } = useForm();
     const { value, errorMessage } = useField('value', validateField);
     const { username, userErrorMessage } = useField('username', validateField);

@@ -3,6 +3,7 @@
         layout: 'custom'
     })
     import { useToast } from 'primevue/usetoast';
+    import { useUserStore } from '~~/stores/user';s
     const { handleSubmit, resetForm } = useForm();
     const { value, errorMessage } = useField('value', validateField);
     const { username, userErrorMessage } = useField('username', validateField);
@@ -16,7 +17,7 @@
 
         return true;
     }
-
+    const userStore = useUserStore()
     const onSubmit = handleSubmit((values) => {
         if (values.value && values.value.length > 0) {
             toast.add({ severity: 'info', summary: 'Form Submitted', detail: values.value, life: 3000 });
@@ -30,12 +31,12 @@
             <Logo class="w-[70px]"/>
         </div>
         <div class="rounded-[56px] p-[0.25rem] bg-gradient">
-            <div class="box rounded-[56px] px-6 py-16 md:px-16 bg-white">
+            <div class="box rounded-[56px] px-6 py-16 md:px-14 min-w-[374px] md:min-w-[400px] bg-white">
                 <header class="block text-center mb-5 w-full">
                     <h3 class="font-normal text-center text-2xl mb-3 text-black">Login</h3>
                     <span class="text-center">Sign in to continue</span>
                 </header>
-                <div class="card flex justify-content-center">
+                <div class="card">
                     <form @submit="onSubmit" class="flex flex-col gap-2">
                         <div class="field flex flex-col">
                             <label class="text-sm" for="username">Username</label>
@@ -51,14 +52,20 @@
                         </div>
                         <div class="flex justify-between">
                             <div class="flex align-items-center">
-                                <PrimeCheckbox v-model="rememberMe" inputId="rememberMe" name="rememberMe" value="Pepper" />
-                                <label for="rememberMe" class="ml-2"> Remember me </label>
+                                <PrimeCheckbox v-model="rememberMe" inputId="rememberMe" name="rememberMe" value="Pepper" 
+                                :pt="{
+                                    input: () => ({
+                                        class: 'border' 
+                                    })
+                                }"
+                                />
+                                <label for="rememberMe" class="ml-2 text-sm text-black cursor-pointer select-none"> Remember me </label>
                             </div>
                             <NuxtLink to="/" class="text-sm text-primary font-normal hover:text-primaryHover">
                                forgot password?
                             </NuxtLink>
                         </div>
-                        <PrimeButton class="flex cursor-pointer text-center relative items-center overflow-hidden bg-primary text-white text-base rounded px-4 py-2.5 hover:bg-primaryHover" type="submit" label="Submit" />
+                        <PrimeButton class="flex cursor-pointer text-center relative items-center overflow-hidden bg-primary text-white text-base rounded px-4 py-2.5 mt-2.5 hover:bg-primaryHover" type="submit" label="Submit" />
                     </form>
                     <PrimeToast />
                 </div>

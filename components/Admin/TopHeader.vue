@@ -34,7 +34,7 @@
             </a>
         </div>
         <button  @click="activeSibar = !activeSibar" class="flex items-center dark:text-[#fff9]" ><i class="pi text-2xl pi-list p-overlay-badge"></i></button>
-        <div class="layout-topbar-menu ml-auto bg-white flex items-center">
+        <div class="layout-topbar-menu ml-auto flex items-center">
             <button 
                 v-tooltip.bottom="{
                     value: 'Admin user',

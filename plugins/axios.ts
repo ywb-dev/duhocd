@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export default defineNuxtPlugin(nuxtApp => {
-    axios.defaults.baseURL = process.env.API_BASE_URL;
+    axios.defaults.baseURL = 'http://127.0.0.1:8000';
     axios.defaults.withCredentials = false;
     axios.defaults.proxyHeaders = false;
 
@@ -16,4 +16,4 @@ export default defineNuxtPlugin(nuxtApp => {
             axios: axios
         }
     }
-})
+})  

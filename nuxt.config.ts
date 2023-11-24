@@ -21,12 +21,18 @@ export default defineNuxtConfig({
       options: {
         ripple: true
       },
+      cssLayerOrder: 'tailwind-base, primevue, tailwind-utilities',
       components: {
          prefix: 'Prime',
-          include: ['Button', 'Password', 'InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast'],
+          include: ['Button', 'Dropdown', 'InputNumber', 'RadioPrimeButton','Password', 'InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload'],
       }
   },
-  css: ['~/assets/css/main.css', 'primevue/resources/themes/lara-light-teal/theme.css', 'primeicons/primeicons.css'],
+  css: [
+    '~/assets/css/main.css', 
+    // 'primevue/resources/themes/lara-light-teal/theme.css', 
+    'primevue/resources/themes/saga-blue/theme.css',
+    'primevue/resources/primevue.min.css',
+    'primeicons/primeicons.css'],
   veeValidate: {
     autoImports: true,
     componentNames: {

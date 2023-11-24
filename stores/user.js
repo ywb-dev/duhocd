@@ -5,19 +5,20 @@ const $axios = axios().provide.axios;
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        username: '',
+        MediaSession: '',
         api_token: '',
+        message: '',
         isLoggedIn: false,
     }),
     actions: {
         async login(username, password) {
             await $axios.post('/api/admin/login', {
-              username: username,
-              password: password,
+              username: username.value,
+              password: password.value,
             }).then((result) => {
-                localStorage.setItem('token',result.data.data.api_token)
-                this.$state.api_token = result.data.data.api_token
-                this.$state.username = result.data.data.username
+                window.localStorage.setItem('token', result?.data?.api_token);
+                this.$state.api_token = result?.data?.api_token
+                this.$state.message = result?.data?.message
                 this.$state.isLoggedIn = true;
             });
         },
@@ -28,7 +29,7 @@ export const useUserStore = defineStore('user', {
         },
 
         resetState() {      
-            this.$state.usermame = ''
+            this.$state.message = ''
             this.$state.api_token = ''
             this.$state.isLoggedIn = false
         },

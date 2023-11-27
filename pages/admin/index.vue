@@ -6,7 +6,7 @@
     const isLogged = ref(true)
 
     if (!isLogged.value) {
-        await navigateTo('/admin/login')
+        await navigateTo('/login')
     }
 
 </script>

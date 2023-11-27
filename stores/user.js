@@ -9,10 +9,11 @@ export const useUserStore = defineStore('user', {
         api_token: '',
         message: '',
         isLoggedIn: false,
+        users: []
     }),
     actions: {
         async login(username, password) {
-            await $axios.post('/api/admin/login', {
+            await $axios.post('/api/login', {
               username: username.value,
               password: password.value,
             }).then((result) => {
@@ -24,7 +25,7 @@ export const useUserStore = defineStore('user', {
         },
         
         async logout() {
-            await $axios.post('/api/admin/logout')
+            await $axios.post('/api/logout')
             this.resetState()
         },
 
@@ -33,6 +34,17 @@ export const useUserStore = defineStore('user', {
             this.$state.api_token = ''
             this.$state.isLoggedIn = false
         },
+        async getUsers() {
+           const users = await $axios.get('/api/users')
+            .then((result) => {
+                return result?.data
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+            return users
+        }
     },
     persist: true,
 })

@@ -2,13 +2,14 @@
 import { FilterMatchMode } from 'primevue/api';
 import { onBeforeMount } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import { useUserStore } from '~~/stores/user';
 
 definePageMeta({
     layout: 'admin'
 })
 
 const toast = useToast();
-
+const userStore = useUserStore()
 const products = ref(null);
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
@@ -28,6 +29,13 @@ onBeforeMount(() => {
     initFilters();
 });
 
+onMounted(() => {
+    userStore.getUsers().then((data) => {
+        console.log('data:', data)
+        products.value = data;
+    });
+});
+
 const openNew = () => {
     product.value = {};
     submitted.value = false;
@@ -43,14 +51,14 @@ const saveProduct = () => {
     submitted.value = true;
     if (product.value.name && product.value.name.trim() && product.value.price) {
         if (product.value.id) {
-            product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
+            product.value.roles = product.value.roles.value ? product.value.roles.value : product.value.roles;
             products.value[findIndexById(product.value.id)] = product.value;
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
         } else {
             product.value.id = createId();
-            product.value.code = createId();
+            product.value.id = createId();
             product.value.image = 'product-placeholder.svg';
-            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
+            product.value.roles = product.value.roles ? product.value.roles.value : 'INSTOCK';
             products.value.push(product.value);
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
         }
@@ -123,17 +131,17 @@ const initFilters = () => {
         <div class="col-12">
             <div class="card">
                 <PrimeToast />
-                <PrimeToolbar class="mb-4">
+                <PrimeToolbar class="mb-4 dark:bg-boxDarkMode flex-wrap">
                     <template v-slot:start>
                         <div class="my-2">
-                            <PrimeButton label="New" severity="success"  icon="pi pi-plus" class="p-PrimeButton-success mr-2 p-button-icon" @click="openNew" />
-                            <PrimeButton label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+                            <PrimeButton severity="info" label="New" icon="pi pi-plus" raised  class="p-PrimeButton-success mr-2 p-button-icon" @click="openNew" />
+                            <PrimeButton severity="danger" label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
                     <template v-slot:end>
-                        <PrimeFileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block" />
-                        <PrimeButton label="Export" icon="pi pi-upload" class="p-PrimeButton-help" @click="exportCSV($event)" />
+                        <!-- <PrimeFileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block" /> -->
+                        <PrimeButton severity="info" label="Export" icon="pi pi-upload" class="p-PrimeButton-help" @click="exportCSV($event)" />
                     </template>
                 </PrimeToolbar>
 
@@ -153,54 +161,53 @@ const initFilters = () => {
                     <template #header>
                         <div class="flex flex-PrimeColumn md:flex-row md:justify-content-between md:align-items-center">
                             <h5 class="m-0">Manage Products</h5>
-                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <!-- <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
-                                <InputText v-model="filters['global'].value" placeholder="Search..." />
-                            </span>
+                                <PrimeInputText v-model="filters['global'].value" placeholder="Search..." />
+                            </span> -->
                         </div>
                     </template>
 
                     <PrimeColumn selectionMode="multiple" headerStyle="width: 3rem"></PrimeColumn>
-                    <PrimeColumn field="code" header="Code" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="id" header="Id" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-PrimeColumn-title">Code</span>
-                            {{ slotProps.data.code }}
-                        </template>
-                    </PrimeColumn>
-                    <PrimeColumn field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <span class="p-PrimeColumn-title">Name</span>
-                            {{ slotProps.data.name }}
+                            {{ slotProps.data.id }}
                         </template>
                     </PrimeColumn>
                     <PrimeColumn header="Image" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-PrimeColumn-title">Image</span>
-                            <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.image" class="shadow-2" width="100" />
+                            <img :src="slotProps.data.image" alt="avatar" class="shadow-2" width="100" />
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="category" header="Category" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-PrimeColumn-title">Category</span>
-                            {{ slotProps.data.category }}
+                            {{ slotProps.data.name }}
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="rating" header="Reviews" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="username" header="username" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-PrimeColumn-title">Rating</span>
-                            <Rating :modelValue="slotProps.data.rating" :readonly="true" :cancel="false" />
+                            {{ slotProps.data.username }}
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="inventoryStatus" header="Status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="email" header="Emails" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-PrimeColumn-title">Status</span>
-                            <span :class="'product-badge status-' + (slotProps.data.inventoryStatus ? slotProps.data.inventoryStatus.toLowerCase() : '')">{{ slotProps.data.inventoryStatus }}</span>
+                            {{ slotProps.data.email }}
+                        </template>
+                    </PrimeColumn>
+                    <PrimeColumn field="roles" header="role" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span :class="'product-badge role-' + (slotProps.data.roles ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
+                        </template>
+                    </PrimeColumn>
+                    <PrimeColumn field="status" header="status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span :class="'product-badge role-' + (slotProps.data.status ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
                         </template>
                     </PrimeColumn>
                     <PrimeColumn headerStyle="min-width:10rem;">
                         <template #body="slotProps">
-                            <PrimeButton icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editProduct(slotProps.data)" />
-                            <PrimeButton icon="pi pi-trash" class="p-PrimeButton-rounded p-PrimeButton-warning mt-2" @click="confirmDeleteProduct(slotProps.data)" />
+                            <PrimeButton severity="info" icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editProduct(slotProps.data)" />
+                            <PrimeButton severity="danger" icon="pi pi-trash" class="p-PrimeButton-rounded p-PrimeButton-warning mt-2" @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </PrimeColumn>
                 </PrimeDataTable>
@@ -209,23 +216,23 @@ const initFilters = () => {
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="field">
                         <label for="name">Name</label>
-                        <InputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
+                        <PrimeInputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
                     <div class="field">
                         <label for="description">Description</label>
-                        <Textarea id="description" v-model="product.description" required="true" rows="3" cols="20" />
+                        <PrimeTextarea id="description" v-model="product.description" required="true" rows="3" cols="20" />
                     </div>
 
                     <div class="field">
-                        <label for="inventoryStatus" class="mb-3">Inventory Status</label>
-                        <PrimeDropdown id="inventoryStatus" v-model="product.inventoryStatus" :options="statuses" optionLabel="label" placeholder="Select a Status">
+                        <label for="roles" class="mb-3">Inventory role</label>
+                        <PrimeDropdown id="roles" v-model="product.roles" :options="statuses" optionLabel="label" placeholder="Select a role">
                             <template #value="slotProps">
                                 <div v-if="slotProps.value && slotProps.value.value">
-                                    <span :class="'product-badge status-' + slotProps.value.value">{{ slotProps.value.label }}</span>
+                                    <span :class="'product-badge role-' + slotProps.value.value">{{ slotProps.value.label }}</span>
                                 </div>
                                 <div v-else-if="slotProps.value && !slotProps.value.value">
-                                    <span :class="'product-badge status-' + slotProps.value.toLowerCase()">{{ slotProps.value }}</span>
+                                    <span :class="'product-badge role-' + slotProps.value.toLowerCase()">{{ slotProps.value }}</span>
                                 </div>
                                 <span v-else>
                                     {{ slotProps.placeholder }}
@@ -235,22 +242,22 @@ const initFilters = () => {
                     </div>
 
                     <div class="field">
-                        <label class="mb-3">Category</label>
+                        <label class="mb-3">username</label>
                         <div class="formgrid grid">
                             <div class="field-radioPrimeButton col-6">
-                                <PrimeRadioPrimeButton id="category1" name="category" value="Accessories" v-model="product.category" />
+                                <PrimeButton id="category1" name="username" value="Accessories" v-model="product.username" />
                                 <label for="category1">Accessories</label>
                             </div>
                             <div class="field-radioPrimeButton col-6">
-                                <PrimeRadioPrimeButton id="category2" name="category" value="Clothing" v-model="product.category" />
+                                <PrimeButton id="category2" name="username" value="Clothing" v-model="product.username" />
                                 <label for="category2">Clothing</label>
                             </div>
                             <div class="field-radioPrimeButton col-6">
-                                <PrimeRadioPrimeButton id="category3" name="category" value="Electronics" v-model="product.category" />
+                                <PrimeButton id="category3" name="username" value="Electronics" v-model="product.username" />
                                 <label for="category3">Electronics</label>
                             </div>
                             <div class="field-radioPrimeButton col-6">
-                                <PrimeRadioPrimeButton id="category4" name="category" value="Fitness" v-model="product.category" />
+                                <PrimeButton id="category4" name="username" value="Fitness" v-model="product.username" />
                                 <label for="category4">Fitness</label>
                             </div>
                         </div>

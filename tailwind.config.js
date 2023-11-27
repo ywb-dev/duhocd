@@ -15,11 +15,14 @@ export default {
         bgDarkMode: '#20262e',
         hoverDarkMode: '#ffffffde',
         'border-field': '#d1d5db',
-        primary: '#1B80CA',
+        primary: '#67a9e7',
         primaryHover: '#035897'
       }
     },
   },
   plugins: [],
   darkMode: 'class',
+  corePlugins: {
+    preflight: false,
+  }
 }

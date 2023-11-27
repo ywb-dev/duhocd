@@ -21,15 +21,15 @@ export default defineNuxtConfig({
       options: {
         ripple: true
       },
-      cssLayerOrder: 'tailwind-base, primevue, tailwind-utilities',
+      cssLayerOrder: 'tailwind-base, tailwind-utilities, primevue',
       components: {
          prefix: 'Prime',
-          include: ['Button', 'Dropdown', 'InputNumber', 'RadioPrimeButton','Password', 'InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload'],
+          include: ['Button', 'Dropdown', 'InputNumber', 'Textarea','RadioPrimeButton','Password', 'Rating','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload'],
       }
   },
   css: [
     '~/assets/css/main.css', 
-    // 'primevue/resources/themes/lara-light-teal/theme.css', 
+    //'primevue/resources/themes/lara-light-teal/theme.css', 
     'primevue/resources/themes/saga-blue/theme.css',
     'primevue/resources/primevue.min.css',
     'primeicons/primeicons.css'],

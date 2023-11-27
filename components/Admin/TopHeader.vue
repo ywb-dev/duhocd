@@ -33,16 +33,20 @@
                 <Logo class="w-14" />
             </a>
         </div>
-        <button  @click="activeSibar = !activeSibar" class="flex items-center dark:text-[#fff9]" ><i class="pi text-2xl pi-list p-overlay-badge"></i></button>
+        <button  @click="activeSibar = !activeSibar" class="flex cursor-pointer items-center dark:bg-transparent dark:text-[#fff9]" ><i class="pi text-2xl pi-list p-overlay-badge"></i></button>
         <div class="layout-topbar-menu ml-auto flex items-center">
             <button 
                 v-tooltip.bottom="{
                     value: 'Admin user',
                     text: 'text-xs'
-                }" class="mr-4 dark:text-[#fff9]"><i class="pi text-xl pi-user p-overlay-badge"></i></button>
-            <button v-tooltip.bottom="'Thông báo!'" class="mr-4 dark:text-[#fff9]"><i v-badge.success="2" class="pi text-xl pi-bell p-overlay-badge"></i></button>
+                }" class="mr-4 dark:bg-transparent dark:text-[#fff9]"><i class="pi text-xl pi-user p-overlay-badge"></i></button>
+            <button v-tooltip.bottom="'Thông báo!'" class="mr-4 cursor-pointer dark:bg-transparent dark:text-[#fff9]"><i v-badge.warning="2" class="pi text-xl pi-bell p-overlay-badge"></i></button>
             <div>
-                <PrimeButton class="dark:text-[#fff9]" type="button" icon="pi text-xl p-overlay-badge pi-spin pi-cog" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" />
+                <PrimeButton
+                :pt="{ 
+                    icon: { class: 'text-[#000] dark:text-white' } 
+                }"
+                class="bg-transparent dark:text-[#fff9]" type="button" icon="pi text-xl p-overlay-badge pi-spin pi-cog" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" />
                 <PrimeMenu ref="menu" id="overlay_menu" :model="items" :popup="true" class="text-xs uppercase text-black my-2.5 font-semibold">
                     <template #end>
                         <div class="flex items-center justify-center">

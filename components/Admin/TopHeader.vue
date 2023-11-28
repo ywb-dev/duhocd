@@ -1,10 +1,20 @@
 <script setup>
     import { ref } from "vue";
+    import { useToast } from 'primevue/usetoast';
     const darkMode = ref(false)
     const menu = ref();
+    const accountMenu = ref();
     const items = ref([
         {
             label: 'Theme mode',
+            items: [
+            ]
+        }
+    ]);
+
+    const accountItems = ref([
+        {
+            label: 'Account Actions',
             items: [
             ]
         }
@@ -14,6 +24,12 @@
         menu.value.toggle(event);
     };
 
+    const accountToggle = (event) => {
+        accountMenu.value.toggle(event);
+    };
+
+    const userStore = useUserStore()
+    
     const changeMode = () => {
         const htmlEl = document.getElementsByTagName('html')[0]
         if (darkMode.value) {
@@ -21,6 +37,13 @@
         } else {
             htmlEl.classList.remove('dark')
         }
+    }
+
+    const toast = useToast();
+
+    const logout = () => {
+        userStore.logout()
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Đăng xuất thành công!', life: 3000 });
     }
 
     const activeSibar = useActive()  
@@ -33,13 +56,23 @@
                 <Logo class="w-14" />
             </a>
         </div>
-        <button  @click="activeSibar = !activeSibar" class="flex cursor-pointer items-center dark:bg-transparent dark:text-[#fff9]" ><i class="pi text-2xl pi-list p-overlay-badge"></i></button>
+        <button  @click="activeSibar = !activeSibar" class="flex cursor-pointer items-center dark:bg-transparent dark:text-[#fff9] mr-4" ><i class="pi text-2xl pi-list p-overlay-badge"></i></button>
         <div class="layout-topbar-menu ml-auto flex items-center">
-            <button 
-                v-tooltip.bottom="{
-                    value: 'Admin user',
-                    text: 'text-xs'
-                }" class="mr-4 dark:bg-transparent dark:text-[#fff9]"><i class="pi text-xl pi-user p-overlay-badge"></i></button>
+            <div>
+                <PrimeButton
+                :pt="{ 
+                    icon: { class: 'text-[#000] dark:text-white' } 
+                }"
+                class="bg-[#efefef] dark:text-[#fff9] mr-4 dark:bg-transparent" type="button" icon="pi text-xl pi-user p-overlay-badge" @click="accountToggle" aria-haspopup="true" aria-controls="overlay_menu_account" />
+                <PrimeMenu ref="accountMenu" id="overlay_menu_account" :model="accountItems" :popup="true" class="text-xs uppercase text-black my-2.5 font-semibold">
+                    <template #end>
+                        <div class="flex px-4 items-center cursor-pointer hover:bg-[#efefef]" @click="logout">
+                            <PrimeButton type="button" icon="pi pi-sign-out" class="bg-transparent text-black"/>
+                            <span class="text-black text-sm capitalize font-semibold">Logout</span>
+                        </div>
+                    </template>
+                </PrimeMenu>
+            </div>
             <button v-tooltip.bottom="'Thông báo!'" class="mr-4 cursor-pointer dark:bg-transparent dark:text-[#fff9]"><i v-badge.warning="2" class="pi text-xl pi-bell p-overlay-badge"></i></button>
             <div>
                 <PrimeButton

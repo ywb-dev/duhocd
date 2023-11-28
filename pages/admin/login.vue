@@ -1,6 +1,4 @@
 <script setup lang="ts">
-    import { useToast } from 'primevue/usetoast';
-    import { useUserStore } from '~~/stores/user';
     import axios from 'axios';
     const router = useRouter()
 
@@ -11,12 +9,11 @@
 
     const { handleSubmit, resetForm } = useForm();
     const { value, errorMessage } = useField('value', validateField);
-    const toast = useToast();
     const rememberMe = ref(false);
     const username = ref('')
     
 
-    function validateField(value) {
+    function validateField(value: any) {
         if (!value) {
             return 'Password is required.';
         }
@@ -24,14 +21,17 @@
         return true;
     }
     const userStore = useUserStore()
+
     const onSubmit = handleSubmit(async(values) => {
-        await userStore.login(username, value);
-        const token = window.localStorage.getItem('token');
-        if (token) {
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + userStore.api_token;
-        }
-        router.push('/admin')
-        toast.add({ severity: 'info', summary: 'Form Submitted', detail: values.value, life: 3000 })
+        const logged = userStore.login(username, value)
+        
+        logged.then(() => {
+            const token = window.localStorage.getItem('token');
+            if (token) {
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + userStore.api_token;
+                router.push('/admin')
+            }
+        })
     });
 </script>
 <template>
@@ -42,20 +42,20 @@
         <div class="rounded-[56px] p-[0.25rem] bg-gradient">
             <div class="box rounded-[56px] px-6 py-16 md:px-14 min-w-[374px] md:min-w-[400px] bg-white">
                 <header class="block text-center mb-5 w-full">
-                    <h3 class="font-normal text-center text-2xl mb-3 text-black">Login</h3>
+                    <h3 class="font-normal text-center text-2xl mb-3 mt-0 text-black">Login</h3>
                     <span class="text-center">Sign in to continue</span>
                 </header>
                 <div class="card">
                     <form @submit="onSubmit" class="flex flex-col gap-2">
                         <div class="field flex flex-col">
                             <label class="text-sm" for="username">Username</label>
-                            <PrimeInputText name="username" id="username" class="border p-invalid border-border-field w-full rounded px-4 py-2.5 hover:border-primary text-sm text-black" v-model="username" type="text" aria-describedby="text-error" />
+                            <PrimeInputText name="username" id="username" class="border border-border-field w-full rounded px-4 py-2.5 hover:border-primary text-sm text-black" v-model="username" type="text" aria-describedby="text-error" />
                             <small class="p-error" id="text-error"></small>
                         </div>
                         <div class="field flex flex-col">
                             <label class="text-sm" for="pw">Password</label>
                             <PrimePassword :pt="{
-                                    input: { class: 'font-bold w-full border border-border-field rounded px-4 py-2.5 text-sm text-black' },
+                                    input: { class: 'font-bold w-full border border-border-field rounded px-4 py-2.5 text-sm text-black hover:border-primary' },
                                 }" id="pw" v-model="value" type="text" :class="{ 'p-invalid rounded': errorMessage }" aria-describedby="text-error" />
                             <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
                         </div>

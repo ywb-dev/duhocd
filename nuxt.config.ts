@@ -16,6 +16,9 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@pinia/nuxt'
   ],
+   pinia: {
+    storesDirs: ['./stores/**', './custom-folder/stores/**'],
+  },
   primevue: {
       usePrimeVue: true,
       options: {

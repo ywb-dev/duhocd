@@ -31,7 +31,6 @@ onBeforeMount(() => {
 
 onMounted(() => {
     userStore.getUsers().then((data) => {
-        console.log('data:', data)
         products.value = data;
     });
 });
@@ -127,8 +126,8 @@ const initFilters = () => {
 </script>
 
 <template>
-    <div class="grid">
-        <div class="col-12">
+    <div class="flex flex-wrap">
+        <div class="w-full">
             <div class="card">
                 <PrimeToast />
                 <PrimeToolbar class="mb-4 dark:bg-boxDarkMode flex-wrap">

@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-primevue',
     '@vee-validate/nuxt',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
   ],
    pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
@@ -35,7 +35,8 @@ export default defineNuxtConfig({
     //'primevue/resources/themes/lara-light-teal/theme.css', 
     'primevue/resources/themes/saga-blue/theme.css',
     'primevue/resources/primevue.min.css',
-    'primeicons/primeicons.css'],
+    'primeicons/primeicons.css'
+  ],
   veeValidate: {
     autoImports: true,
     componentNames: {
@@ -45,4 +46,7 @@ export default defineNuxtConfig({
       ErrorMessage: 'VeeErrorMessage',
     },
   },
+  imports: {
+    dirs: ['stores'],
+  }
 })

@@ -1,7 +1,6 @@
-<script setup lang="ts">
+<script setup>
     import axios from 'axios';
-    const router = useRouter()
-
+    import { useToast } from 'primevue/usetoast';
     definePageMeta({
         layout: 'custom',
         middleware: 'is-logged-in'
@@ -11,25 +10,31 @@
     const { value, errorMessage } = useField('value', validateField);
     const rememberMe = ref(false);
     const username = ref('')
-    
+    const router = useRouter()
+    const userStore = useUserStore()
+    const toast = useToast();
+    const token = useCookie('token')
 
-    function validateField(value: any) {
+    function validateField(value) {
         if (!value) {
             return 'Password is required.';
         }
 
         return true;
     }
-    const userStore = useUserStore()
 
     const onSubmit = handleSubmit(async(values) => {
         const logged = userStore.login(username, value)
-        
         logged.then(() => {
-            const token = window.localStorage.getItem('token');
-            if (token) {
-                axios.defaults.headers.common['Authorization'] = 'Bearer ' + userStore.api_token;
-                router.push('/admin')
+            console.log('abcd:', token.value)
+            if (!userStore.isLoggedIn) {
+                toast.add({ severity: 'error', summary: 'Error!', detail: userStore.message, life: 4000 });
+                resetForm();
+            } else {
+                if (token.value) {
+                    axios.defaults.headers.common['Authorization'] = 'Bearer ' + userStore.api_token;
+                    router.push('/admin')
+                }
             }
         })
     });
@@ -55,8 +60,8 @@
                         <div class="field flex flex-col">
                             <label class="text-sm" for="pw">Password</label>
                             <PrimePassword :pt="{
-                                    input: { class: 'font-bold w-full border border-border-field rounded px-4 py-2.5 text-sm text-black hover:border-primary' },
-                                }" id="pw" v-model="value" type="text" :class="{ 'p-invalid rounded': errorMessage }" aria-describedby="text-error" />
+                                    input: { class: 'font-normal w-full border border-border-field rounded px-4 py-2.5 text-sm text-black hover:border-primary' },
+                                }" id="pw" v-model="value" toggleMask type="text" :class="{ 'p-invalid rounded': errorMessage }" aria-describedby="text-error" />
                             <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
                         </div>
                         <div class="flex justify-between">

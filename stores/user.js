@@ -1,46 +1,44 @@
-import { defineStore } from "pinia";
 import axios from "~/plugins/axios";
+import { defineStore } from "pinia";
 
 const $axios = axios().provide.axios;
 
-export const useUserStore = defineStore('user', {
-    state: () => {
-        return {
-            api_token: '',
-            message: '',
-            isLoggedIn: false,
-            users: []
-        }
-    },
-    actions: {
-        async login(username, password) {
-           const response = await $axios.post('/api/login', {
-                username: username.value,
-                password: password.value,
-            }).then((result) => {
-                window.localStorage.setItem('token', result?.data?.data?.api_token);
-                this.api_token = result?.data?.api_token;
-                this.message = result?.data?.message;
-                this.isLoggedIn = result?.data?.success;
-            }).catch(function (errors) {
-                this.message = errors?.response?.data?.data?.error;
-            })
+export const useUserStore = defineStore('user', () => {
+    const api_token = ref('')
+    const message = ref('')
+    const isLoggedIn = ref(false)
+    const users = ref([])
+    const tokenCookie = useCookie('token')
 
-            return response
-        },
-        
-        async logout() {
-            await $axios.get('/api/logout')
-            this.resetState()
-        },
+    const login = async (username, password) => {
+        const response = await $axios.post('/api/login', {
+            username: username.value,
+            password: password.value,
+        }).then((result) => {
+            tokenCookie.value = result?.data?.data?.api_token
+            api_token.value = result?.data?.data?.api_token;
+            message.value = result?.data?.message;
+            isLoggedIn.value = result?.data?.success;
+        }).catch(function (errors) {
+            message.value = errors?.response?.data?.data?.error;
+        })
 
-        resetState() {      
-            this.message = ''
-            this.api_token = ''
-            this.isLoggedIn = false
-        },
-        async getUsers() {
-           const users = await $axios.get('/api/user')
+        return response
+    }
+
+    const logout = () => {
+        $axios.get('/api/logout')
+        resetState()
+    }
+
+    const resetState = () => {
+        message.value = ''
+        api_token.value = ''
+        isLoggedIn.value = false
+    }
+
+    const getUsers = async () => {
+        const users = await $axios.get('/api/user')
             .then((result) => {
                 return result?.data?.data
             })
@@ -48,8 +46,8 @@ export const useUserStore = defineStore('user', {
                 console.log(error);
             });
 
-            return users
-        }
-    },
-    persist: true,
+        return users
+    }
+
+    return { login, logout, getUsers, message, isLoggedIn, api_token }
 })

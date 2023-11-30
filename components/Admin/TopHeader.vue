@@ -1,6 +1,11 @@
 <script setup>
     import { ref } from "vue";
     import { useToast } from 'primevue/usetoast';
+
+    definePageMeta({
+        middleware: 'is-logged-out'
+    })
+
     const darkMode = ref(false)
     const menu = ref();
     const accountMenu = ref();
@@ -43,7 +48,6 @@
 
     const logout = () => {
         userStore.logout()
-        toast.add({ severity: 'success', summary: 'Successful', detail: 'Đăng xuất thành công!', life: 3000 });
     }
 
     const activeSibar = useActive()  

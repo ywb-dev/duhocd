@@ -10,7 +10,7 @@ definePageMeta({
 
 const toast = useToast();
 const userStore = useUserStore()
-const products = ref(null);
+const users = ref(null);
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
@@ -31,7 +31,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
     userStore.getUsers().then((data) => {
-        products.value = data;
+        users.value = data;
     });
 });
 
@@ -51,14 +51,14 @@ const saveProduct = () => {
     if (product.value.name && product.value.name.trim() && product.value.price) {
         if (product.value.id) {
             product.value.roles = product.value.roles.value ? product.value.roles.value : product.value.roles;
-            products.value[findIndexById(product.value.id)] = product.value;
+            users.value[findIndexById(product.value.id)] = product.value;
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
         } else {
             product.value.id = createId();
             product.value.id = createId();
             product.value.image = 'product-placeholder.svg';
             product.value.roles = product.value.roles ? product.value.roles.value : 'INSTOCK';
-            products.value.push(product.value);
+            users.value.push(product.value);
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
         }
         productDialog.value = false;
@@ -78,7 +78,7 @@ const confirmDeleteProduct = (editProduct) => {
 };
 
 const deleteProduct = () => {
-    products.value = products.value.filter((val) => val.id !== product.value.id);
+    users.value = users.value.filter((val) => val.id !== product.value.id);
     deleteProductDialog.value = false;
     product.value = {};
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
@@ -86,8 +86,8 @@ const deleteProduct = () => {
 
 const findIndexById = (id) => {
     let index = -1;
-    for (let i = 0; i < products.value.length; i++) {
-        if (products.value[i].id === id) {
+    for (let i = 0; i < users.value.length; i++) {
+        if (users.value[i].id === id) {
             index = i;
             break;
         }
@@ -112,7 +112,7 @@ const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
 const deleteSelectedProducts = () => {
-    products.value = products.value.filter((val) => !selectedProducts.value.includes(val));
+    users.value = users.value.filter((val) => !selectedProducts.value.includes(val));
     deleteProductsDialog.value = false;
     selectedProducts.value = null;
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
@@ -123,6 +123,7 @@ const initFilters = () => {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     };
 };
+
 </script>
 
 <template>
@@ -146,7 +147,7 @@ const initFilters = () => {
 
                 <PrimeDataTable
                     ref="dt"
-                    :value="products"
+                    :value="users"
                     v-model:selection="selectedProducts"
                     dataKey="id"
                     :paginator="true"
@@ -159,7 +160,7 @@ const initFilters = () => {
                 >
                     <template #header>
                         <div class="flex flex-PrimeColumn md:flex-row md:justify-content-between md:align-items-center">
-                            <h5 class="m-0">Manage Products</h5>
+                            <h5 class="m-0">Manage Users</h5>
                             <!-- <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
                                 <PrimeInputText v-model="filters['global'].value" placeholder="Search..." />
@@ -193,6 +194,11 @@ const initFilters = () => {
                             {{ slotProps.data.email }}
                         </template>
                     </PrimeColumn>
+                    <!-- <PrimeColumn field="phone" header="Phone" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            {{ slotProps.data.phone }}
+                        </template>
+                    </PrimeColumn> -->
                     <PrimeColumn field="roles" header="role" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span :class="'product-badge role-' + (slotProps.data.roles ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
@@ -211,7 +217,7 @@ const initFilters = () => {
                     </PrimeColumn>
                 </PrimeDataTable>
 
-                <PrimeDialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
+                <PrimeDialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Users Details" :modal="true" class="p-fluid">
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="field">
                         <label for="name">Name</label>
@@ -219,59 +225,19 @@ const initFilters = () => {
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
                     <div class="field">
-                        <label for="description">Description</label>
-                        <PrimeTextarea id="description" v-model="product.description" required="true" rows="3" cols="20" />
+                        <label for="username">UserName</label>
+                        <PrimeInputText id="username" v-model.trim="product.username" required="true" autofocus :class="{ 'p-invalid': submitted && !product.username }" />
+                        <small class="p-invalid" v-if="submitted && !product.username">Username is required.</small>
                     </div>
-
                     <div class="field">
-                        <label for="roles" class="mb-3">Inventory role</label>
-                        <PrimeDropdown id="roles" v-model="product.roles" :options="statuses" optionLabel="label" placeholder="Select a role">
-                            <template #value="slotProps">
-                                <div v-if="slotProps.value && slotProps.value.value">
-                                    <span :class="'product-badge role-' + slotProps.value.value">{{ slotProps.value.label }}</span>
-                                </div>
-                                <div v-else-if="slotProps.value && !slotProps.value.value">
-                                    <span :class="'product-badge role-' + slotProps.value.toLowerCase()">{{ slotProps.value }}</span>
-                                </div>
-                                <span v-else>
-                                    {{ slotProps.placeholder }}
-                                </span>
-                            </template>
-                        </PrimeDropdown>
+                        <label for="email">Email</label>
+                        <PrimeInputText id="email" v-model.trim="product.email" required="true" autofocus :class="{ 'p-invalid': submitted && !product.email }" />
+                        <small class="p-invalid" v-if="submitted && !product.email">Email is required.</small>
                     </div>
-
                     <div class="field">
-                        <label class="mb-3">username</label>
-                        <div class="formgrid grid">
-                            <div class="field-radioPrimeButton col-6">
-                                <PrimeButton id="category1" name="username" value="Accessories" v-model="product.username" />
-                                <label for="category1">Accessories</label>
-                            </div>
-                            <div class="field-radioPrimeButton col-6">
-                                <PrimeButton id="category2" name="username" value="Clothing" v-model="product.username" />
-                                <label for="category2">Clothing</label>
-                            </div>
-                            <div class="field-radioPrimeButton col-6">
-                                <PrimeButton id="category3" name="username" value="Electronics" v-model="product.username" />
-                                <label for="category3">Electronics</label>
-                            </div>
-                            <div class="field-radioPrimeButton col-6">
-                                <PrimeButton id="category4" name="username" value="Fitness" v-model="product.username" />
-                                <label for="category4">Fitness</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="formgrid grid">
-                        <div class="field col">
-                            <label for="price">Price</label>
-                            <PrimeInputNumber id="price" v-model="product.price" mode="currency" currency="USD" locale="en-US" :class="{ 'p-invalid': submitted && !product.price }" :required="true" />
-                            <small class="p-invalid" v-if="submitted && !product.price">Price is required.</small>
-                        </div>
-                        <div class="field col">
-                            <label for="quantity">Quantity</label>
-                            <PrimeInputNumber id="quantity" v-model="product.quantity" integeronly />
-                        </div>
+                        <label for="phone">Phone Number</label>
+                        <PrimeInputText id="phone" v-model.trim="product.phone" required="true" autofocus :class="{ 'p-invalid': submitted && !product.phone }" />
+                        <small class="p-invalid" v-if="submitted && !product.phone">Phone Number is required.</small>
                     </div>
                     <template #footer>
                         <PrimeButton label="Cancel" icon="pi pi-times" class="p-PrimeButton-text" @click="hideDialog" />

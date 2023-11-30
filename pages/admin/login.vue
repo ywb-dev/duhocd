@@ -13,7 +13,6 @@
     const router = useRouter()
     const userStore = useUserStore()
     const toast = useToast();
-    const token = useCookie('token')
 
     function validateField(value) {
         if (!value) {
@@ -26,12 +25,11 @@
     const onSubmit = handleSubmit(async(values) => {
         const logged = userStore.login(username, value)
         logged.then(() => {
-            console.log('abcd:', token.value)
             if (!userStore.isLoggedIn) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: userStore.message, life: 4000 });
                 resetForm();
             } else {
-                if (token.value) {
+                if (userStore.isLoggedIn) {
                     axios.defaults.headers.common['Authorization'] = 'Bearer ' + userStore.api_token;
                     router.push('/admin')
                 }

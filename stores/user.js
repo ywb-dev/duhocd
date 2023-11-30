@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', () => {
     const isLoggedIn = ref(false)
     const users = ref([])
     const tokenCookie = useCookie('token')
+    const router = useRouter()
 
     const login = async (username, password) => {
         const response = await $axios.post('/api/login', {
@@ -20,15 +21,20 @@ export const useUserStore = defineStore('user', () => {
             message.value = result?.data?.message;
             isLoggedIn.value = result?.data?.success;
         }).catch(function (errors) {
-            message.value = errors?.response?.data?.data?.error;
+            message.value = errors?.response?.data?.data?.error || errors?.response?.data?.message;
         })
 
         return response
     }
 
     const logout = () => {
-        $axios.get('/api/logout')
-        resetState()
+       return $axios.get('/api/logout')
+        .then(() => {
+            tokenCookie.value = null
+            resetState()
+            alert('Đăng xuất thành công')
+            router.push('/admin/login')
+        })
     }
 
     const resetState = () => {

@@ -96,3 +96,33 @@ button {
   appearance: none;
   border: 0;
 }
+
+.p-column-title {
+  font-size: 15px;
+}
+
+.p-sortable-column-icon {
+  width: 12px;
+}
+
+.p-paginator-current,
+.p-datatable-tbody td {
+  font-size: 14px;
+}
+         
+td .p-button.p-component{
+  width: 34px;
+  height: 34px;
+}
+
+td .p-button-icon {
+  font-size: 14px;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  font-size: 16px;
+}

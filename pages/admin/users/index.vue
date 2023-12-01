@@ -24,6 +24,7 @@ const statuses = ref([
     { label: 'LOWSTOCK', value: 'lowstock' },
     { label: 'OUTOFSTOCK', value: 'outofstock' }
 ]);
+const apiUrl = useRuntimeConfig()
 
 onBeforeMount(() => {
     initFilters();
@@ -47,7 +48,8 @@ const hideDialog = () => {
 };
 
 const saveProduct = () => {
-    submitted.value = true;
+    submitted.value = true;   
+    console.log('productName:', product.value)
     if (product.value.name && product.value.name.trim() && product.value.price) {
         if (product.value.id) {
             product.value.roles = product.value.roles.value ? product.value.roles.value : product.value.roles;
@@ -134,14 +136,20 @@ const initFilters = () => {
                 <PrimeToolbar class="mb-4 dark:bg-boxDarkMode flex-wrap">
                     <template v-slot:start>
                         <div class="my-2">
-                            <PrimeButton severity="info" label="New" icon="pi pi-plus" raised  class="p-PrimeButton-success mr-2 p-button-icon" @click="openNew" />
+                            <PrimeButton severity="info" label="New" icon="pi pi-plus" raised  class="p-PrimeButton-success mr-2 p-button-icon" @click="openNew" 
+                            :pt="{ 
+                                root: { class: 'bg-primary' } 
+                            }"/>
                             <PrimeButton severity="danger" label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
                     <template v-slot:end>
                         <!-- <PrimeFileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block" /> -->
-                        <PrimeButton severity="info" label="Export" icon="pi pi-upload" class="p-PrimeButton-help" @click="exportCSV($event)" />
+                        <PrimeButton severity="info" label="Export" icon="pi pi-upload" class="p-PrimeButton-help" @click="exportCSV($event)" 
+                        :pt="{ 
+                            root: { class: 'bg-primary' } 
+                        }"/>
                     </template>
                 </PrimeToolbar>
 
@@ -174,9 +182,9 @@ const initFilters = () => {
                             {{ slotProps.data.id }}
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn header="Image" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn header="Image" headerStyle="width:14%; min-width:10rem;" >
                         <template #body="slotProps">
-                            <img :src="slotProps.data.image" alt="avatar" class="shadow-2" width="100" />
+                            <img :src="slotProps.data.avatar ? apiUrl.public.apiBase + slotProps.data.avatar : '/'" alt="avatar" class="shadow-2" width="100" />
                         </template>
                     </PrimeColumn>
                     <PrimeColumn field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -211,14 +219,34 @@ const initFilters = () => {
                     </PrimeColumn>
                     <PrimeColumn headerStyle="min-width:10rem;">
                         <template #body="slotProps">
-                            <PrimeButton severity="info" icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editProduct(slotProps.data)" />
+                            <PrimeButton severity="info" icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editProduct(slotProps.data)" 
+                            :pt="{ 
+                                root: { class: 'bg-primary' } 
+                            }"/>
                             <PrimeButton severity="danger" icon="pi pi-trash" class="p-PrimeButton-rounded p-PrimeButton-warning mt-2" @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </PrimeColumn>
                 </PrimeDataTable>
 
                 <PrimeDialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Users Details" :modal="true" class="p-fluid">
-                    <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
+                    <div class="filed mb-4">
+                        <label for="avatar">Avatar</label>
+                        <PrimeFileUpload
+                            id="avatar"
+                            name="demo[]"
+                            url="./upload.php"
+                            :multiple="true"
+                            accept="image/*"
+                            :maxFileSize="1000000"
+                            :pt="{
+                                content: { class: 'surface-ground' }
+                            }"
+                        >
+                            <template #empty>
+                                <p>Drag and drop files to here to upload.</p>
+                            </template>
+                        </PrimeFileUpload>
+                    </div>
                     <div class="field">
                         <label for="name">Name</label>
                         <PrimeInputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
@@ -240,8 +268,14 @@ const initFilters = () => {
                         <small class="p-invalid" v-if="submitted && !product.phone">Phone Number is required.</small>
                     </div>
                     <template #footer>
-                        <PrimeButton label="Cancel" icon="pi pi-times" class="p-PrimeButton-text" @click="hideDialog" />
-                        <PrimeButton label="Save" icon="pi pi-check" class="p-PrimeButton-text" @click="saveProduct" />
+                        <PrimeButton label="Cancel" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="hideDialog"
+                        :pt="{ 
+                            label: { class: 'font-bold' } 
+                        }" />
+                        <PrimeButton label="Save" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="saveProduct" 
+                        :pt="{ 
+                            label: { class: 'font-bold' } 
+                        }"/>
                     </template>
                 </PrimeDialog>
 
@@ -254,8 +288,15 @@ const initFilters = () => {
                         >
                     </div>
                     <template #footer>
-                        <PrimeButton label="No" icon="pi pi-times" class="p-PrimeButton-text" @click="deleteProductDialog = false" />
-                        <PrimeButton label="Yes" icon="pi pi-check" class="p-PrimeButton-text" @click="deleteProduct" />
+                        <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="deleteProductDialog = false" 
+                        :pt="{ 
+                            label: { class: 'font-bold' } 
+                        }"/>
+                        <PrimeButton label="Yes" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="deleteProduct" 
+                        :pt="{ 
+                            label: { class: 'font-bold' } 
+                        }"
+                        />
                     </template>
                 </PrimeDialog>
 
@@ -265,8 +306,14 @@ const initFilters = () => {
                         <span v-if="product">Are you sure you want to delete the selected products?</span>
                     </div>
                     <template #footer>
-                        <PrimeButton label="No" icon="pi pi-times" class="p-PrimeButton-text" @click="deleteProductsDialog = false" />
-                        <PrimeButton label="Yes" icon="pi pi-check" class="p-PrimeButton-text" @click="deleteSelectedProducts" />
+                        <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="deleteProductsDialog = false" 
+                        :pt="{ 
+                            label: { class: 'font-bold' } 
+                        }"/>
+                        <PrimeButton label="Yes" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="deleteSelectedProducts" 
+                        :pt="{ 
+                            label: { class: 'font-bold' } 
+                        }"/>
                     </template>
                 </PrimeDialog>
             </div>

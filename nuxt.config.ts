@@ -48,5 +48,11 @@ export default defineNuxtConfig({
   },
   imports: {
     dirs: ['stores'],
+  },
+  runtimeConfig: {
+    secret: process.env.SECRET,
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE
+    }
   }
 })

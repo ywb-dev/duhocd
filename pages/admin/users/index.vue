@@ -61,6 +61,7 @@ const saveProduct = () => {
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Edited', life: 3000 });  
                 getUsers()
             }).catch((errors) => {
+                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
                 console.log(errors)
             })
         } else {
@@ -71,6 +72,7 @@ const saveProduct = () => {
                 getUsers()
             }).catch((errors) => {
                 console.log(errors)
+                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
             })
         }
         productDialog.value = false;
@@ -93,6 +95,7 @@ const deleteProduct = () => {
     users.value = users.value.filter((val) => val.id !== product.value.id);
     deleteProductDialog.value = false;
     product.value = {};
+    userStore.deleteUser(product.id)
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
 };
 
@@ -135,6 +138,10 @@ const initFilters = () => {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     };
 };
+
+const onAdvancedUpload = (e) => {
+    console.log('e:', e.target)
+}
 
 </script>
 
@@ -264,7 +271,7 @@ const initFilters = () => {
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
                     <div class="field">
-                        <label for="username">UserName</label>
+                        <label for="username">User name</label>
                         <PrimeInputText id="username" v-model.trim="product.username" required="true" autofocus :class="{ 'p-invalid': submitted && !product.username }" />
                         <small class="p-invalid" v-if="submitted && !product.username">Username is required.</small>
                     </div>
@@ -274,7 +281,7 @@ const initFilters = () => {
                         <small class="p-invalid" v-if="submitted && !product.email">Email is required.</small>
                     </div>
                     <div class="field">
-                        <label for="phone">Phone Number</label>
+                        <label for="phone">Phone number</label>
                         <PrimeInputText id="phone" v-model.trim="product.phone" required="true" autofocus :class="{ 'p-invalid': submitted && !product.phone }" />
                         <small class="p-invalid" v-if="submitted && !product.phone">Phone Number is required.</small>
                     </div>

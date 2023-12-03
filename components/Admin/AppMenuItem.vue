@@ -70,4 +70,17 @@ const itemKey = ref(null);
 .layout-submenu .active-menuitem .layout-menuitem-text {
     @apply font-bold text-[#6366f1] dark:!text-[#8dd0ff];
 }
+
+.router-link-active {
+    @apply shadow-[inset_0_0_0_0.2rem_#C7D2FE] dark:shadow-[inset_0_0_0_1px_#e3f3fe] ;
+}
+
+.router-link-active i,
+.router-link-active span {
+    @apply  text-primary;
+}
+
+.router-link-active span {
+    @apply font-semibold;
+}
 </style>

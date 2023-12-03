@@ -55,5 +55,29 @@ export const useUserStore = defineStore('user', () => {
         return users
     }
 
-    return { login, logout, getUsers, message, isLoggedIn, api_token }
+    const createUser = async (payload) => {
+        const users = await $axios.post('/api/user', payload)
+            .then((result) => {
+                return result?.data?.data
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        return users
+    }
+
+    const editUser = async (id, payload) => {
+        const users = await $axios.put(`/api/user/${id}`, payload)
+            .then((result) => {
+                return result?.data?.data
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        return users
+    }
+
+    return { login, logout, message, isLoggedIn, api_token, getUsers, createUser, editUser }
 })

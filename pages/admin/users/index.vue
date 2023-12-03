@@ -25,15 +25,18 @@ const statuses = ref([
     { label: 'OUTOFSTOCK', value: 'outofstock' }
 ]);
 const apiUrl = useRuntimeConfig()
+const getUsers = () => {
+    userStore.getUsers().then((data) => {
+        users.value = data;
+    });
+}
 
 onBeforeMount(() => {
     initFilters();
 });
 
 onMounted(() => {
-    userStore.getUsers().then((data) => {
-        users.value = data;
-    });
+    getUsers()
 });
 
 const openNew = () => {
@@ -49,19 +52,26 @@ const hideDialog = () => {
 
 const saveProduct = () => {
     submitted.value = true;   
-    console.log('productName:', product.value)
-    if (product.value.name && product.value.name.trim() && product.value.price) {
+
+    if (product.value.email && product.value.email.trim() && product.value.username) {
         if (product.value.id) {
-            product.value.roles = product.value.roles.value ? product.value.roles.value : product.value.roles;
             users.value[findIndexById(product.value.id)] = product.value;
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+
+            userStore.editUser(product.value.id, product.value).then(() => {
+                toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Edited', life: 3000 });  
+                getUsers()
+            }).catch((errors) => {
+                console.log(errors)
+            })
         } else {
             product.value.id = createId();
-            product.value.id = createId();
-            product.value.image = 'product-placeholder.svg';
-            product.value.roles = product.value.roles ? product.value.roles.value : 'INSTOCK';
-            users.value.push(product.value);
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+            // users.value.push(product.value);
+            userStore.createUser(product.value).then(() => {
+                toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });  
+                getUsers()
+            }).catch((errors) => {
+                console.log(errors)
+            })
         }
         productDialog.value = false;
         product.value = {};
@@ -70,7 +80,7 @@ const saveProduct = () => {
 
 const editProduct = (editProduct) => {
     product.value = { ...editProduct };
-    console.log(product);
+
     productDialog.value = true;
 };
 
@@ -238,6 +248,7 @@ const initFilters = () => {
                             :multiple="true"
                             accept="image/*"
                             :maxFileSize="1000000"
+                            @upload="onAdvancedUpload($event)"
                             :pt="{
                                 content: { class: 'surface-ground' }
                             }"

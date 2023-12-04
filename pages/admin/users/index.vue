@@ -25,6 +25,7 @@ const statuses = ref([
     { label: 'OUTOFSTOCK', value: 'outofstock' }
 ]);
 const apiUrl = useRuntimeConfig()
+
 const getUsers = () => {
     userStore.getUsers().then((data) => {
         users.value = data;
@@ -50,25 +51,34 @@ const hideDialog = () => {
     submitted.value = false;
 };
 
-const saveProduct = () => {
+const onUpload = (e) => {
+    const file = e.target.files[0]
+    product.value.avatar = file
+};
+
+const saveProduct = async () => {
     submitted.value = true;   
+    const formData = new FormData();
+    formData.append('avatar', product.value.avatar);
+    formData.append('name', product.value.name);
+    formData.append('username', product.value.username);
+    formData.append('email', product.value.email);
+    formData.append('phone', product.value.phone);
 
     if (product.value.email && product.value.email.trim() && product.value.username) {
         if (product.value.id) {
-            users.value[findIndexById(product.value.id)] = product.value;
+            // users.value[findIndexById(product.value.id)] = product.value;
 
-            userStore.editUser(product.value.id, product.value).then(() => {
-                toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Edited', life: 3000 });  
+            await userStore.editUser(product.value.id, formData).then(() => {
+                toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });  
                 getUsers()
             }).catch((errors) => {
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
                 console.log(errors)
             })
-        } else {
-            product.value.id = createId();
-            // users.value.push(product.value);
-            userStore.createUser(product.value).then(() => {
-                toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });  
+        } else {        
+            await userStore.createUser(formData).then((data) => {
+                toast.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });  
                 getUsers()
             }).catch((errors) => {
                 console.log(errors)
@@ -138,11 +148,6 @@ const initFilters = () => {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     };
 };
-
-const onAdvancedUpload = (e) => {
-    console.log('e:', e.target)
-}
-
 </script>
 
 <template>
@@ -201,7 +206,7 @@ const onAdvancedUpload = (e) => {
                     </PrimeColumn>
                     <PrimeColumn header="Image" headerStyle="width:14%; min-width:10rem;" >
                         <template #body="slotProps">
-                            <img :src="slotProps.data.avatar ? apiUrl.public.apiBase + slotProps.data.avatar : '/'" alt="avatar" class="shadow-2" width="100" />
+                            <img :src="slotProps.data.avatar ? apiUrl.public.apiBase + slotProps.data.avatar : '/image/avatar-default-icon.png'" alt="avatar" class="shadow-2 w-20 h-20 object-cover" width="100" />
                         </template>
                     </PrimeColumn>
                     <PrimeColumn field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -246,53 +251,50 @@ const onAdvancedUpload = (e) => {
                 </PrimeDataTable>
 
                 <PrimeDialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Users Details" :modal="true" class="p-fluid">
-                    <div class="filed mb-4">
-                        <label for="avatar">Avatar</label>
-                        <PrimeFileUpload
-                            id="avatar"
-                            name="demo[]"
-                            url="./upload.php"
-                            :multiple="true"
-                            accept="image/*"
-                            :maxFileSize="1000000"
-                            @upload="onAdvancedUpload($event)"
+                    <div class="filed mb-4 flex  flex-col items-center justify-center">
+                       <div class="w-28 h-28 overflow-hidden rounded-full mb-4">
+                            <PrimeImage 
                             :pt="{
-                                content: { class: 'surface-ground' }
-                            }"
-                        >
-                            <template #empty>
-                                <p>Drag and drop files to here to upload.</p>
-                            </template>
-                        </PrimeFileUpload>
+                                image: { class: 'mt-0 mx-auto mb-5 block shadow-2 w-full h-full object-cover' }
+                            }" preview :src="product.avatar ? apiUrl.public.apiBase + product.avatar : '/image/avatar-default-icon.png'" :alt="product.avatar" width="150" />
+                       </div>
+                        <label v-if="!product.avatar" for="avatar" class="mb-4">Avatar</label>
+                        <input type="file" accept="image/*" @change="onUpload" :maxFileSize="1000000">
+                        <!-- <PrimeFileUpload 
+                        :pt="{
+                            root: { class: 'bg-transparent' }
+                        }"
+                        @uploader="onUpload"
+                        mode="basic" accept="image/*" url="/api/upload" :maxFileSize="1000000"  class="mr-2 inline-block"/> -->
                     </div>
                     <div class="field">
-                        <label for="name">Name</label>
+                        <label class="block mb-0.5 text-sm" for="name">Name</label>
                         <PrimeInputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
                     <div class="field">
-                        <label for="username">User name</label>
+                        <label class="block mb-0.5 text-sm" for="username">User name</label>
                         <PrimeInputText id="username" v-model.trim="product.username" required="true" autofocus :class="{ 'p-invalid': submitted && !product.username }" />
                         <small class="p-invalid" v-if="submitted && !product.username">Username is required.</small>
                     </div>
                     <div class="field">
-                        <label for="email">Email</label>
+                        <label class="block mb-0.5 text-sm" for="email">Email</label>
                         <PrimeInputText id="email" v-model.trim="product.email" required="true" autofocus :class="{ 'p-invalid': submitted && !product.email }" />
                         <small class="p-invalid" v-if="submitted && !product.email">Email is required.</small>
                     </div>
                     <div class="field">
-                        <label for="phone">Phone number</label>
+                        <label class="block mb-0.5 text-sm" for="phone">Phone number</label>
                         <PrimeInputText id="phone" v-model.trim="product.phone" required="true" autofocus :class="{ 'p-invalid': submitted && !product.phone }" />
                         <small class="p-invalid" v-if="submitted && !product.phone">Phone Number is required.</small>
                     </div>
                     <template #footer>
                         <PrimeButton label="Cancel" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="hideDialog"
                         :pt="{ 
-                            label: { class: 'font-bold' } 
+                            label: { class: 'font-semibold' } 
                         }" />
                         <PrimeButton label="Save" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="saveProduct" 
                         :pt="{ 
-                            label: { class: 'font-bold' } 
+                            label: { class: 'font-semibold' } 
                         }"/>
                     </template>
                 </PrimeDialog>
@@ -308,11 +310,11 @@ const onAdvancedUpload = (e) => {
                     <template #footer>
                         <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="deleteProductDialog = false" 
                         :pt="{ 
-                            label: { class: 'font-bold' } 
+                            label: { class: 'font-semibold' } 
                         }"/>
                         <PrimeButton label="Yes" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="deleteProduct" 
                         :pt="{ 
-                            label: { class: 'font-bold' } 
+                            label: { class: 'font-semibold' } 
                         }"
                         />
                     </template>

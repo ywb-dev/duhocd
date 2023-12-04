@@ -49,7 +49,7 @@ const itemKey = ref(null);
 <template>
     <li :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
         <div v-if="root && item.visible !== false" class="layout-menuitem-root-text text-xs uppercase text-black dark:text-white my-2.5 font-bold">{{ item.label }}</div>
-        <NuxtLink v-if="item.to && !item.items && item.visible !== false" @click="" :class="[item.class, { 'active-route': checkActiveRoute(item) }]" tabindex="0" :to="item.to" class="py-2.5 px-4 flex cursor-pointer rounded-xl hover:bg-[#EBEDF0] dark:hover:bg-[#ffffff0a] focus:shadow-[inset_0_0_0_0.2rem_#C7D2FE] dark:focus:shadow-[inset_0_0_0_1px_#e3f3fe] transition-all">
+        <NuxtLink v-if="item.to && !item.items && item.visible !== false" @click="" :class="[item.class, { 'active-route': checkActiveRoute(item) }]" tabindex="0" :to="item.to" class="py-2.5 px-4 flex cursor-pointer items-center rounded-xl hover:bg-[#EBEDF0] dark:hover:bg-[#ffffff0a] focus:shadow-[inset_0_0_0_0.2rem_#C7D2FE] dark:focus:shadow-[inset_0_0_0_1px_#e3f3fe] transition-all">
             <i :class="item.icon" class="layout-menuitem-icon w-[18px] mr-1.5 dark:text-white"></i>
             <span class="layout-menuitem-text text-black dark:text-white font-normal text-sm">{{ item.label }}</span>
             <i class="pi pi-fw pi-sngle-down layout-submenu-toggler w-[18px] mr-1.5 dark:text-white" v-if="item.items"></i>

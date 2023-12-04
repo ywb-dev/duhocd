@@ -27,7 +27,7 @@ export default defineNuxtConfig({
       cssLayerOrder: 'tailwind-base, tailwind-utilities, primevue',
       components: {
          prefix: 'Prime',
-          include: ['Button', 'Dropdown', 'InputNumber', 'Textarea','RadioPrimeButton','Password', 'Rating','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload'],
+          include: ['Button', 'Dropdown', 'InputNumber', 'Textarea','RadioPrimeButton','Password', 'Rating','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload', 'Image', 'InlineMessage'],
       }
   },
   css: [
@@ -50,9 +50,8 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
   runtimeConfig: {
-    secret: process.env.SECRET,
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE
+      apiBase: 'http://127.0.0.1:8000/'
     }
   }
 })

@@ -126,3 +126,39 @@ td .p-button-icon {
 .field label {
   font-size: 14px;
 }
+
+/* Responsive table */
+@media (max-width: 767px) {
+    .p-datatable-table {
+      width: 100%;
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    .p-datatable-thead {
+      display: none;
+    }
+
+    .p-datatable-thead > tr {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+
+    }
+
+    .p-datatable-tbody {
+      flex: 1;
+    }
+
+    .p-datatable-tbody > tr {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+      border: 1px solid #67a9e7;
+    }
+
+    .p-datatable-header {
+      border: 1px solid #e9ecef;
+    }
+}

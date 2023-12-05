@@ -18,12 +18,9 @@ const product = ref({});
 const selectedProducts = ref(null);
 const dt = ref(null);
 const filters = ref({});
+const stt = 1
 const submitted = ref(false);
-const statuses = ref([
-    { label: 'INSTOCK', value: 'instock' },
-    { label: 'LOWSTOCK', value: 'lowstock' },
-    { label: 'OUTOFSTOCK', value: 'outofstock' }
-]);
+
 const apiUrl = useRuntimeConfig()
 
 const getUsers = () => {
@@ -32,11 +29,19 @@ const getUsers = () => {
     });
 }
 
+const getDefaultAvatar = async () => {
+  const defaultAvatarPath = '/image/avatar-default-icon.png';
+  const response = await fetch(defaultAvatarPath);
+  const blob = await response.blob();
+  return blob;
+};
+
 onBeforeMount(() => {
     initFilters();
 });
 
 onMounted(() => {
+    initFilters();
     getUsers()
 });
 
@@ -57,18 +62,25 @@ const onUpload = (e) => {
 };
 
 const saveProduct = async () => {
-    submitted.value = true;   
+    submitted.value = true; 
     const formData = new FormData();
-    formData.append('avatar', product.value.avatar);
-    formData.append('name', product.value.name);
-    formData.append('username', product.value.username);
-    formData.append('email', product.value.email);
-    formData.append('phone', product.value.phone);
+
+    if (product.value.avatar) {
+        formData.append('avatar', product.value.avatar);
+    } else {
+        const defaultAvatarBlob = await getDefaultAvatar(); // Hàm này trả về Blob của default avatar
+        formData.append('avatar', defaultAvatarBlob, 'avatar-default-icon.png');
+    }
+
+    formData.append('avatar', product.value.avatar || null);
+    formData.append('name', product.value.name || null);
+    formData.append('username', product.value.username || null );
+    formData.append('email', product.value.email || null);
+    formData.append('phone', product.value.phone || '000000000');
 
     if (product.value.email && product.value.email.trim() && product.value.username) {
         if (product.value.id) {
             // users.value[findIndexById(product.value.id)] = product.value;
-
             await userStore.editUser(product.value.id, formData).then(() => {
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });  
                 getUsers()
@@ -92,7 +104,6 @@ const saveProduct = async () => {
 
 const editProduct = (editProduct) => {
     product.value = { ...editProduct };
-
     productDialog.value = true;
 };
 
@@ -120,14 +131,14 @@ const findIndexById = (id) => {
     return index;
 };
 
-const createId = () => {
-    let id = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-};
+// const createId = () => {
+//     let id = '';
+//     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//     for (let i = 0; i < 5; i++) {
+//         id += chars.charAt(Math.floor(Math.random() * chars.length));
+//     }
+//     return id;
+// };
 
 const exportCSV = () => {
     dt.value.exportCSV();
@@ -189,39 +200,54 @@ const initFilters = () => {
                     responsiveLayout="scroll"
                 >
                     <template #header>
-                        <div class="flex flex-PrimeColumn md:flex-row md:justify-content-between md:align-items-center">
-                            <h5 class="m-0">Manage Users</h5>
-                            <!-- <span class="block mt-2 md:mt-0 p-input-icon-left">
-                                <i class="pi pi-search" />
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                            <h5 class="m-0 text-xl mb-1.5">Manage Users</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search " />
                                 <PrimeInputText v-model="filters['global'].value" placeholder="Search..." />
-                            </span> -->
+                            </span>
                         </div>
                     </template>
 
                     <PrimeColumn selectionMode="multiple" headerStyle="width: 3rem"></PrimeColumn>
-                    <PrimeColumn field="id" header="Id" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="id" header="Stt" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            {{ slotProps.data.id }}
+                            <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">Stt: </span>
+                                <span class="ml-32 md:ml-0">{{ stt++ }}</span>
+                            </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn header="Image" headerStyle="width:14%; min-width:10rem;" >
+                    <PrimeColumn header="Avatar" headerStyle="width:14%; min-width:10rem;" >
                         <template #body="slotProps">
-                            <img :src="slotProps.data.avatar ? apiUrl.public.apiBase + slotProps.data.avatar : '/image/avatar-default-icon.png'" alt="avatar" class="shadow-2 w-20 h-20 object-cover" width="100" />
+                           <div>
+                                <span class="md:hidden font-bold absolute">Avatar: </span>
+                                <img :src="slotProps.data.avatar ? apiUrl.public.apiBase + slotProps.data.avatar : '/image/avatar-default-icon.png'" alt="avatar" class="shadow-2 w-20 h-20 object-cover ml-32 md:ml-0" width="100" />
+                           </div>
                         </template>
                     </PrimeColumn>
                     <PrimeColumn field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            {{ slotProps.data.name }}
+                            <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">Name: </span>
+                                <span class="ml-32 md:ml-0">{{ slotProps.data.name }}</span>
+                            </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="username" header="username" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="username" header="User name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            {{ slotProps.data.username }}
+                           <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">User name: </span>
+                                <span class="ml-32 md:ml-0">{{ slotProps.data.username }}</span>
+                           </div>
                         </template>
                     </PrimeColumn>
                     <PrimeColumn field="email" header="Emails" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            {{ slotProps.data.email }}
+                            <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">Email: </span>
+                                <span class="ml-32 md:ml-0">{{ slotProps.data.email }}</span>
+                            </div>
                         </template>
                     </PrimeColumn>
                     <!-- <PrimeColumn field="phone" header="Phone" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -229,14 +255,20 @@ const initFilters = () => {
                             {{ slotProps.data.phone }}
                         </template>
                     </PrimeColumn> -->
-                    <PrimeColumn field="roles" header="role" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="roles" header="Roles" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span :class="'product-badge role-' + (slotProps.data.roles ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
+                            <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">Roles: </span>
+                                <span class="ml-32 md:ml-0" :class="'product-badge role-' + (slotProps.data.roles ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
+                            </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="status" header="status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="status" header="Status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span :class="'product-badge role-' + (slotProps.data.status ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
+                            <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">Status: </span>
+                                <span class="ml-32 md:ml-0" :class="'product-badge role-' + (slotProps.data.status ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
+                            </div>
                         </template>
                     </PrimeColumn>
                     <PrimeColumn headerStyle="min-width:10rem;">
@@ -284,8 +316,7 @@ const initFilters = () => {
                     </div>
                     <div class="field">
                         <label class="block mb-0.5 text-sm" for="phone">Phone number</label>
-                        <PrimeInputText id="phone" v-model.trim="product.phone" required="true" autofocus :class="{ 'p-invalid': submitted && !product.phone }" />
-                        <small class="p-invalid" v-if="submitted && !product.phone">Phone Number is required.</small>
+                        <PrimeInputText id="phone" v-model.trim="product.phone" required="true" autofocus />
                     </div>
                     <template #footer>
                         <PrimeButton label="Cancel" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="hideDialog"
@@ -323,7 +354,7 @@ const initFilters = () => {
                 <PrimeDialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product">Are you sure you want to delete the selected products?</span>
+                        <span v-if="product">Bạn có muốn xóa những users đã chọn không?</span>
                     </div>
                     <template #footer>
                         <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="deleteProductsDialog = false" 
@@ -340,5 +371,3 @@ const initFilters = () => {
         </div>
     </div>
 </template>
-
-<style scoped lang="scss"></style>

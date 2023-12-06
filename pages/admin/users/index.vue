@@ -41,7 +41,6 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-    initFilters();
     getUsers()
 });
 
@@ -68,7 +67,7 @@ const saveProduct = async () => {
     if (product.value.avatar) {
         formData.append('avatar', product.value.avatar);
     } else {
-        const defaultAvatarBlob = await getDefaultAvatar(); // Hàm này trả về Blob của default avatar
+        const defaultAvatarBlob = await getDefaultAvatar();
         formData.append('avatar', defaultAvatarBlob, 'avatar-default-icon.png');
     }
 
@@ -80,19 +79,18 @@ const saveProduct = async () => {
 
     if (product.value.email && product.value.email.trim() && product.value.username) {
         if (product.value.id) {
-            // users.value[findIndexById(product.value.id)] = product.value;
-            await userStore.editUser(product.value.id, formData).then(() => {
+            await userStore.editUser(product.value.id, product.value).then(() => {
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });  
                 getUsers()
-            }).catch((errors) => {
+            }).catch(function(errors) {
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
                 console.log(errors)
             })
         } else {        
-            await userStore.createUser(formData).then((data) => {
+            await userStore.createUser(formData).then(() => {
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });  
                 getUsers()
-            }).catch((errors) => {
+            }).catch(function(errors) {
                 console.log(errors)
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
             })
@@ -114,31 +112,16 @@ const confirmDeleteProduct = (editProduct) => {
 
 const deleteProduct = () => {
     users.value = users.value.filter((val) => val.id !== product.value.id);
+    userStore.deleteUser(product.value.id).then(()=> {
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
+    }) 
+    .catch(function (error) {
+        console.log(error);
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
+    });
     deleteProductDialog.value = false;
     product.value = {};
-    userStore.deleteUser(product.id)
-    toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
 };
-
-const findIndexById = (id) => {
-    let index = -1;
-    for (let i = 0; i < users.value.length; i++) {
-        if (users.value[i].id === id) {
-            index = i;
-            break;
-        }
-    }
-    return index;
-};
-
-// const createId = () => {
-//     let id = '';
-//     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//     for (let i = 0; i < 5; i++) {
-//         id += chars.charAt(Math.floor(Math.random() * chars.length));
-//     }
-//     return id;
-// };
 
 const exportCSV = () => {
     dt.value.exportCSV();
@@ -148,10 +131,20 @@ const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
 const deleteSelectedProducts = () => {
-    users.value = users.value.filter((val) => !selectedProducts.value.includes(val));
+    users.value = users.value.filter((val) => {
+       return !selectedProducts.value.includes(val)
+    });
+
+    const userIds = selectedProducts.value.map(user => user.id);
+  
+    userStore.deleteSelectUser(userIds).then(()=> {
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
+    }).catch(function(error) {
+        console.log(error)
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
+    })
     deleteProductsDialog.value = false;
     selectedProducts.value = null;
-    toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 };
 
 const initFilters = () => {
@@ -159,6 +152,7 @@ const initFilters = () => {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS }
     };
 };
+initFilters()
 </script>
 
 <template>
@@ -255,14 +249,14 @@ const initFilters = () => {
                             {{ slotProps.data.phone }}
                         </template>
                     </PrimeColumn> -->
-                    <PrimeColumn field="roles" header="Roles" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <!-- <PrimeColumn field="roles" header="Roles" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Roles: </span>
                                 <span class="ml-32 md:ml-0" :class="'product-badge role-' + (slotProps.data.roles ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
                             </div>
                         </template>
-                    </PrimeColumn>
+                    </PrimeColumn> -->
                     <PrimeColumn field="status" header="Status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
@@ -334,8 +328,8 @@ const initFilters = () => {
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                         <span v-if="product"
-                            >Are you sure you want to delete <b>{{ product.name }}</b
-                            >?</span
+                            >Bạn có chắc là muốn xóa <b>{{ product.name }}</b
+                            > không?</span
                         >
                     </div>
                     <template #footer>

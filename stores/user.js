@@ -91,5 +91,19 @@ export const useUserStore = defineStore('user', () => {
         return users
     }
 
-    return { login, logout, message, isLoggedIn, api_token, getUsers, createUser, editUser, deleteUser }
+    const deleteSelectUser = async (payload) => {
+        const users = await $axios.delete('/api/users/delete', {
+            data: { user_ids: payload },
+        })
+        .then((result) => {
+            return result?.data?.data
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+        return users
+    }
+
+    return { login, logout, message, isLoggedIn, api_token, getUsers, createUser, editUser, deleteUser, deleteSelectUser }
 })

@@ -6,7 +6,7 @@ import Editor from 'primevue/editor';
 
     const postitle = ref('')
     const editContent = ref('')
-    console.log(editContent)
+    const tags = ref([])
 
     const selectedAction = ref('Visible');
     const actions = ref([
@@ -51,7 +51,7 @@ import Editor from 'primevue/editor';
                                 <Editor class="mt-6" v-model="editContent" editorStyle="height: 320px" />
                             </div>
                         </div>
-                        <div class="sidebar relative w-full lg:max-w-[300px] mt-6 lg:mt-0 ml-0 lg:ml-6">
+                        <div class="sidebar relative w-full lg:max-w-[360px] mt-6 lg:mt-0 ml-0 lg:ml-6">
                             <div class="w-full rounded-xl p-8 flex flex-col bg-white mb-6">
                                 <h4 class="mt-0 text-base font-medium">Visibility</h4>
                                 <div v-for="action in actions" :key="action.key" class="flex align-items-center mb-4">
@@ -62,6 +62,16 @@ import Editor from 'primevue/editor';
                             <div class="w-full rounded-xl p-8 flex flex-col bg-white mb-6">
                                 <PrimeDropdown v-model="selectedCategory" editable :options="categories" optionLabel="name" placeholder="category" class="w-full mb-4" />
                                 <h4 class="mt-0 text-base font-medium">Feature Image</h4>
+                                <div class="w-full h-px bg-[#ced4da] my-2"></div>
+                                <div class="">
+                                    <label for="tag" class="text-sm">Tags</label>
+                                    <PrimeChips id="tag" class="w-full mt-2" v-model="tags" :pt="{
+                                        container: { class: 'w-full' },
+                                        label: { class: 'text-white'},
+                                        removeTokenIcon: { class: 'text-white' },
+                                        token: { class: 'bg-primary'}
+                                    }" />
+                                </div>
                             </div>
                         </div>
                     </div>

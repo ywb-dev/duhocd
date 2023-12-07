@@ -3,10 +3,10 @@ import { defineStore } from "pinia";
 
 const $axios = axios().provide.axios;
 
-export const useCategoryStore = defineStore('category', () => {
+export const useBlogStore = defineStore('blog', () => {
     
     const getBlogs = async () => {
-        const users = await $axios.get('/api/blog')
+        const blogs = await $axios.get('/api/blog')
             .then((result) => {
                 return result?.data?.data
             })
@@ -14,7 +14,8 @@ export const useCategoryStore = defineStore('category', () => {
                 console.log(error);
             });
 
-        return users
+        return blogs
     }
 
+    return { getBlogs }
 })

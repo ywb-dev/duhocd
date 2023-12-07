@@ -2,15 +2,15 @@
 import { FilterMatchMode } from 'primevue/api';
 import { onBeforeMount } from 'vue';
 import { useToast } from 'primevue/usetoast';
-import { useUserStore } from '~~/stores/user';
+import { useBlogStore } from '~~/stores/blog';
 
 definePageMeta({
     layout: 'admin'
 })
 
 const toast = useToast();
-const userStore = useUserStore()
-const users = ref(null);
+const blogStore = useBlogStore()
+const blogs = ref(null);
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
@@ -21,9 +21,9 @@ const filters = ref({});
 const stt = 1
 const submitted = ref(false);
 
-const getUsers = () => {
-    userStore.getUsers().then((data) => {
-        users.value = data;
+const getBlogs = () => {
+    blogStore.getBlogs().then((data) => {
+        blogs.value = data;
     });
 }
 
@@ -39,24 +39,8 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-    getUsers()
+    getBlogs()
 });
-
-const openNew = () => {
-    product.value = {};
-    submitted.value = false;
-    productDialog.value = true;
-};
-
-const hideDialog = () => {
-    productDialog.value = false;
-    submitted.value = false;
-};
-
-const onUpload = (e) => {
-    const file = e.target.files[0]
-    product.value.avatar = file
-};
 
 const saveProduct = async () => {
     submitted.value = true; 
@@ -77,17 +61,17 @@ const saveProduct = async () => {
 
     if (product.value.email && product.value.email.trim() && product.value.username) {
         if (product.value.id) {
-            await userStore.editUser(product.value.id, product.value).then(() => {
+            await blogStore.editUser(product.value.id, product.value).then(() => {
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });  
-                getUsers()
+                getBlogs()
             }).catch(function(errors) {
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
                 console.log(errors)
             })
         } else {        
-            await userStore.createUser(formData).then(() => {
+            await blogStore.createUser(formData).then(() => {
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });  
-                getUsers()
+                getBlogs()
             }).catch(function(errors) {
                 console.log(errors)
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
@@ -109,8 +93,8 @@ const confirmDeleteProduct = (editProduct) => {
 };
 
 const deleteProduct = () => {
-    users.value = users.value.filter((val) => val.id !== product.value.id);
-    userStore.deleteUser(product.value.id).then(()=> {
+    blogs.value = blogs.value.filter((val) => val.id !== product.value.id);
+    blogStore.deleteUser(product.value.id).then(()=> {
         toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
     }) 
     .catch(function (error) {
@@ -129,13 +113,13 @@ const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
 const deleteSelectedProducts = () => {
-    users.value = users.value.filter((val) => {
+    blogs.value = blogs.value.filter((val) => {
        return !selectedProducts.value.includes(val)
     });
 
     const userIds = selectedProducts.value.map(user => user.id);
   
-    userStore.deleteSelectUser(userIds).then(()=> {
+    blogStore.deleteSelectUser(userIds).then(()=> {
         toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
     }).catch(function(error) {
         console.log(error)
@@ -160,17 +144,13 @@ initFilters()
                 <PrimeToast />
                 <PrimeToolbar class="mb-4 dark:bg-boxDarkMode flex-wrap">
                     <template v-slot:start>
-                        <div class="my-2">
-                            <PrimeButton severity="info" label="New" icon="pi pi-plus" raised  class="p-PrimeButton-success mr-2 p-button-icon" @click="openNew" 
-                            :pt="{ 
-                                root: { class: 'bg-primary' } 
-                            }"/>
+                        <div class="my-2 flex flex-wrap">
+                            <NuxtLink to="/admin/blogs/create" class=" button-animate"><span><i class="pi pi-plus"></i></span><span class="ml-1.5">Create</span></NuxtLink>
                             <PrimeButton severity="danger" label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
                     <template v-slot:end>
-                        <!-- <PrimeFileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block" /> -->
                         <PrimeButton severity="info" label="Export" icon="pi pi-upload" class="p-PrimeButton-help" @click="exportCSV($event)" 
                         :pt="{ 
                             root: { class: 'bg-primary' } 
@@ -180,7 +160,7 @@ initFilters()
 
                 <PrimeDataTable
                     ref="dt"
-                    :value="users"
+                    :value="blogs"
                     v-model:selection="selectedProducts"
                     dataKey="id"
                     :paginator="true"
@@ -210,11 +190,11 @@ initFilters()
                             </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn header="Avatar" headerStyle="width:14%; min-width:10rem;" >
+                    <PrimeColumn header="Banner" headerStyle="width:14%; min-width:10rem;" >
                         <template #body="slotProps">
                            <div>
-                                <span class="md:hidden font-bold absolute">Avatar: </span>
-                                <img :src="slotProps.data.avatar ? apiUrl.public.apiBase + slotProps.data.avatar : '/image/avatar-default-icon.png'" alt="avatar" class="shadow-2 w-20 h-20 object-cover ml-32 md:ml-0" width="100" />
+                                <span class="md:hidden font-bold absolute">Banner: </span>
+                                <img :src="'/image/avatar-default-icon.png'" alt="avatar" class="shadow-2 w-40 h-40 rounded overfow-hidden object-cover ml-32 md:ml-0" width="100" />
                            </div>
                         </template>
                     </PrimeColumn>
@@ -222,7 +202,7 @@ initFilters()
                         <template #body="slotProps">
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Title: </span>
-                                <span class="ml-32 md:ml-0">{{ slotProps.data.title }}</span>
+                                <span class="ml-32 md:ml-0 text-ellipsis">{{ slotProps.data.title }}</span>
                             </div>
                         </template>
                     </PrimeColumn>
@@ -230,7 +210,7 @@ initFilters()
                         <template #body="slotProps">
                            <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Category name: </span>
-                                <span class="ml-32 md:ml-0">{{ slotProps.data.categoryName }}</span>
+                                <span class="ml-32 md:ml-0 text-ellipsis">{{ slotProps.data.category?.name }}</span>
                            </div>
                         </template>
                     </PrimeColumn>
@@ -238,19 +218,11 @@ initFilters()
                         <template #body="slotProps">
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Author: </span>
-                                <span class="ml-32 md:ml-0">{{ slotProps.data.userName }}</span>
+                                <span class="ml-32 md:ml-0">{{ slotProps.data.user?.name }}</span>
                             </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="description" header="Description" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <div class="flex items-center">
-                                <span class="md:hidden font-bold absolute">Author: </span>
-                                <span class="ml-32 md:ml-0">{{ slotProps.data.description }}</span>
-                            </div>
-                        </template>
-                    </PrimeColumn>
-                    <PrimeColumn headerStyle="min-width:10rem;">
+                    <PrimeColumn headerStyle="min-width:10rem;" header="Action">
                         <template #body="slotProps">
                             <PrimeButton severity="info" icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editProduct(slotProps.data)" 
                             :pt="{ 

@@ -162,3 +162,43 @@ td .p-button-icon {
       border: 1px solid #e9ecef;
     }
 }
+
+.button-animate {
+  display: flex;
+  margin-right: 8px;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  background-color: #67a9e7;
+  transition: all ease-in 0.3s;
+  border-radius: 4px;
+  color: white;
+}
+
+.button-animate:hover {
+  box-shadow: 0 0 0 0.2rem #89d4fe;
+}
+
+.button-animate::after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.5s;
+  box-shadow: 0 0 10px 10px #67a9e7;
+}
+
+.button-animate:active::after {
+  box-shadow: 0 0 0 0 #67a9e7;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  opacity: 1;
+  transition: 0s;
+}

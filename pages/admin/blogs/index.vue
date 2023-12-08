@@ -198,7 +198,7 @@ initFilters()
                            </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="tile" header="Title" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="title" header="Title" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Title: </span>

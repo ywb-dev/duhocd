@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 import { resolve } from 'path'
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -14,7 +13,7 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-primevue',
     '@vee-validate/nuxt',
-    '@pinia/nuxt',
+    '@pinia/nuxt'
   ],
    pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
@@ -27,11 +26,11 @@ export default defineNuxtConfig({
       cssLayerOrder: 'tailwind-base, tailwind-utilities, primevue',
       components: {
          prefix: 'Prime',
-          include: ['Button', 'RadioButton','Dropdown', 'Chips','InputNumber', 'Textarea','RadioPrimeButton','Password', 'Rating','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload', 'Image', 'InlineMessage'],
+          include: ['Button', 'RadioButton','Dropdown', 'Chips','InputNumber', 'Textarea','RadioPrimeButton','Password', 'Rating','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload', 'Image', 'InlineMessage', 'MegaMenu'],
       }
   },
   css: [
-    '~/assets/css/main.css', 
+    '~/assets/css/global.css', 
     //'primevue/resources/themes/lara-light-teal/theme.css', 
     'primevue/resources/themes/saga-blue/theme.css',
     'primevue/resources/primevue.min.css',

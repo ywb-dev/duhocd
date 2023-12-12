@@ -62,7 +62,7 @@ const itemKey = ref(null);
     </li>
 </template>
 
-<style lang="css" >
+<style lang="css" scoped >
 .layout-submenu .active-menuitem a i,
 .layout-submenu .active-menuitem a {
     @apply font-bold text-[#6366f1] dark:!text-[#8dd0ff];

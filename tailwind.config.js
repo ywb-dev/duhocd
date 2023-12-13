@@ -18,7 +18,10 @@ export default {
         primary: '#67a9e7',
         primaryHover: '#035897',
         textPrimary: '#1B80CA',
-        bgDark: '#144162'
+        bgDark: '#144162',
+        grey: {
+          400: '#C8C8C8',
+        }
       },
       fontSize: {
         ss: '8px'

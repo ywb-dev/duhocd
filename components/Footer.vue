@@ -7,7 +7,7 @@
                         <div class="flex flex-col justify-between w-full px-2 py-4 md:py-8">
                             <div>
                                 <a class="block mb-4" href="#">
-                                    <FooterLogo class="w-30"></FooterLogo>
+                                    <IconFooterLogo class="w-30"></IconFooterLogo>
                                 </a>
                             </div>
                             <div>

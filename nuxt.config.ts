@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 import { resolve } from 'path'
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -16,6 +15,9 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@pinia/nuxt'
   ],
+   pinia: {
+    storesDirs: ['./stores/**', './custom-folder/stores/**'],
+  },
   primevue: {
       usePrimeVue: true,
       options: {
@@ -24,15 +26,16 @@ export default defineNuxtConfig({
       cssLayerOrder: 'tailwind-base, tailwind-utilities, primevue',
       components: {
          prefix: 'Prime',
-          include: ['Button', 'Dropdown', 'InputNumber', 'Textarea','RadioPrimeButton','Password', 'Rating','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload'],
+          include: ['Button', 'Accordion', 'Galleria','AccordionTab','RadioButton','Dropdown', 'Chips','InputNumber', 'Textarea','RadioPrimeButton','Password', 'Rating','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload', 'Image', 'InlineMessage', 'MegaMenu'],
       }
   },
   css: [
-    '~/assets/css/main.css', 
+    '~/assets/css/global.css', 
     //'primevue/resources/themes/lara-light-teal/theme.css', 
     'primevue/resources/themes/saga-blue/theme.css',
     'primevue/resources/primevue.min.css',
-    'primeicons/primeicons.css'],
+    'primeicons/primeicons.css'
+  ],
   veeValidate: {
     autoImports: true,
     componentNames: {
@@ -42,4 +45,12 @@ export default defineNuxtConfig({
       ErrorMessage: 'VeeErrorMessage',
     },
   },
+  imports: {
+    dirs: ['stores'],
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://127.0.0.1:8000/'
+    }
+  }
 })

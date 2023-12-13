@@ -16,8 +16,21 @@ export default {
         hoverDarkMode: '#ffffffde',
         'border-field': '#d1d5db',
         primary: '#67a9e7',
-        primaryHover: '#035897'
+        primaryHover: '#035897',
+        textPrimary: '#1B80CA',
+        bgDark: '#144162',
+        grey: {
+          400: '#C8C8C8',
+        }
+      },
+      fontSize: {
+        ss: '8px'
       }
+    },
+    container: {
+      padding: {
+        DEFAULT: '1rem',
+      },
     },
   },
   plugins: [],

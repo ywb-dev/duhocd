@@ -1,17 +1,14 @@
 <script setup lang="ts">
     definePageMeta({
-    layout: 'admin'
-    })
+        layout: 'admin',
+        middleware: 'is-logged-in'
+    });
 
-    const isLogged = ref(true)
-
-    if (!isLogged.value) {
-        await navigateTo('/login')
-    }
+    
+    // import Chart from 'primevue/chart';
 
 </script>
+
 <template>
-    <div >
-        <h1 class="dark:text-red-500">Admin123</h1>
-    </div>
+    <!-- <Chart type="pie" :data="chartData" :options="chartOptions" class="w-full md:w-30rem" /> -->
 </template>

@@ -48,10 +48,10 @@ const itemKey = ref(null);
 
 <template>
     <li :class="{ 'layout-root-menuitem': root, 'active-menuitem': isActiveMenu }">
-        <div v-if="root && item.visible !== false" class="layout-menuitem-root-text text-xs uppercase text-black dark:text-white my-2.5 font-semibold">{{ item.label }}</div>
-        <NuxtLink v-if="item.to && !item.items && item.visible !== false" @click="" :class="[item.class, { 'active-route': checkActiveRoute(item) }]" tabindex="0" :to="item.to" class="py-2.5 px-4 flex cursor-pointer rounded-xl hover:bg-[#EBEDF0] dark:hover:bg-[#ffffff0a] focus:shadow-[inset_0_0_0_0.2rem_#C7D2FE] dark:focus:shadow-[inset_0_0_0_1px_#e3f3fe] transition-all">
+        <div v-if="root && item.visible !== false" class="layout-menuitem-root-text text-xs uppercase text-black dark:text-white my-2.5 font-bold">{{ item.label }}</div>
+        <NuxtLink v-if="item.to && !item.items && item.visible !== false" @click="" :class="[item.class, { 'active-route': checkActiveRoute(item) }]" tabindex="0" :to="item.to" class="py-2.5 px-4 flex cursor-pointer items-center rounded-xl hover:bg-[#EBEDF0] dark:hover:bg-[#ffffff0a] focus:shadow-[inset_0_0_0_0.2rem_#C7D2FE] dark:focus:shadow-[inset_0_0_0_1px_#e3f3fe] transition-all">
             <i :class="item.icon" class="layout-menuitem-icon w-[18px] mr-1.5 dark:text-white"></i>
-            <span class="layout-menuitem-text text-black dark:text-white font-light text-sm">{{ item.label }}</span>
+            <span class="layout-menuitem-text text-black dark:text-white font-normal text-sm">{{ item.label }}</span>
             <i class="pi pi-fw pi-sngle-down layout-submenu-toggler w-[18px] mr-1.5 dark:text-white" v-if="item.items"></i>
         </NuxtLink >
         <Transition v-if="item.items && item.visible !== false" name="layout-submenu">
@@ -62,12 +62,25 @@ const itemKey = ref(null);
     </li>
 </template>
 
-<style lang="css" >
+<style lang="css" scoped >
 .layout-submenu .active-menuitem a i,
 .layout-submenu .active-menuitem a {
     @apply font-bold text-[#6366f1] dark:!text-[#8dd0ff];
 }
 .layout-submenu .active-menuitem .layout-menuitem-text {
     @apply font-bold text-[#6366f1] dark:!text-[#8dd0ff];
+}
+
+.router-link-active {
+    @apply shadow-[inset_0_0_0_0.2rem_#C7D2FE] dark:shadow-[inset_0_0_0_1px_#e3f3fe] ;
+}
+
+.router-link-active i,
+.router-link-active span {
+    @apply  text-primary;
+}
+
+.router-link-active span {
+    @apply font-semibold;
 }
 </style>

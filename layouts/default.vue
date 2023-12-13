@@ -1,6 +1,11 @@
 <template>
     <div>
-        <h1>this is default layout</h1>
-        <slot />
+        <Header />
+        <div class="pt-[155px]">
+            <NuxtPage />
+        </div>
+        <Footer />
     </div>
 </template>
+<script setup>
+</script>

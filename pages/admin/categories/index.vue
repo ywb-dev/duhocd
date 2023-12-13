@@ -2,15 +2,14 @@
 import { FilterMatchMode } from 'primevue/api';
 import { onBeforeMount } from 'vue';
 import { useToast } from 'primevue/usetoast';
-import { useUserStore } from '~~/stores/user';
+import { useCategoryStore } from '~~/stores/category';
 
 definePageMeta({
     layout: 'admin'
 })
 
 const toast = useToast();
-const userStore = useUserStore()
-const users = ref(null);
+const categories = ref(null);
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
@@ -20,28 +19,20 @@ const dt = ref(null);
 const filters = ref({});
 const stt = 1
 const submitted = ref(false);
+const categoryStore = useCategoryStore()
 
-const apiUrl = useRuntimeConfig()
-
-const getUsers = () => {
-    userStore.getUsers().then((data) => {
-        users.value = data;
+const getCategories = () => {
+    categoryStore.getCategories().then((data) => {
+        categories.value = data;
     });
 }
-
-const getDefaultAvatar = async () => {
-  const defaultAvatarPath = '/image/avatar-default-icon.png';
-  const response = await fetch(defaultAvatarPath);
-  const blob = await response.blob();
-  return blob;
-};
 
 onBeforeMount(() => {
     initFilters();
 });
 
 onMounted(() => {
-    getUsers()
+    getCategories()
 });
 
 const openNew = () => {
@@ -55,41 +46,26 @@ const hideDialog = () => {
     submitted.value = false;
 };
 
-const onUpload = (e) => {
-    const file = e.target.files[0]
-    product.value.avatar = file
-};
-
 const saveProduct = async () => {
     submitted.value = true; 
     const formData = new FormData();
 
-    if (product.value.avatar) {
-        formData.append('avatar', product.value.avatar);
-    } else {
-        const defaultAvatarBlob = await getDefaultAvatar();
-        formData.append('avatar', defaultAvatarBlob, 'avatar-default-icon.png');
-    }
-
-    formData.append('avatar', product.value.avatar || null);
     formData.append('name', product.value.name || null);
-    formData.append('username', product.value.username || null );
-    formData.append('email', product.value.email || null);
-    formData.append('phone', product.value.phone || '000000000');
+    formData.append('description', product.value.description || null );
 
-    if (product.value.email && product.value.email.trim() && product.value.username) {
+    if (product.value.name && product.value.name.trim()) {
         if (product.value.id) {
-            await userStore.editUser(product.value.id, product.value).then(() => {
+            await categoryStore.editCategory(product.value.id, product.value).then(() => {
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });  
-                getUsers()
+                getCategories()
             }).catch(function(errors) {
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
                 console.log(errors)
             })
         } else {        
-            await userStore.createUser(formData).then(() => {
+            await categoryStore.createCategory(formData).then(() => {
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });  
-                getUsers()
+                getCategories()
             }).catch(function(errors) {
                 console.log(errors)
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
@@ -111,8 +87,8 @@ const confirmDeleteProduct = (editProduct) => {
 };
 
 const deleteProduct = () => {
-    users.value = users.value.filter((val) => val.id !== product.value.id);
-    userStore.deleteUser(product.value.id).then(()=> {
+    categories.value = categories.value.filter((val) => val.id !== product.value.id);
+    categoryStore.deleteCategory(product.value.id).then(()=> {
         toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
     }) 
     .catch(function (error) {
@@ -131,14 +107,14 @@ const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
 const deleteSelectedProducts = () => {
-    users.value = users.value.filter((val) => {
+    categories.value = categories.value.filter((val) => {
        return !selectedProducts.value.includes(val)
     });
 
     const userIds = selectedProducts.value.map(user => user.id);
   
-    userStore.deleteSelectUser(userIds).then(()=> {
-        toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
+    categoryStore.deleteSelectCategory(userIds).then(()=> {
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Category đã xóa thành công', life: 3000 });
     }).catch(function(error) {
         console.log(error)
         toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
@@ -182,7 +158,7 @@ initFilters()
 
                 <PrimeDataTable
                     ref="dt"
-                    :value="users"
+                    :value="categories"
                     v-model:selection="selectedProducts"
                     dataKey="id"
                     :paginator="true"
@@ -195,7 +171,7 @@ initFilters()
                 >
                     <template #header>
                         <div class="flex flex-col md:flex-row md:justify-between md:items-center">
-                            <h5 class="m-0 text-xl mb-1.5">Manage Users</h5>
+                            <h5 class="m-0 text-xl mb-1.5">Manage Categories</h5>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search " />
                                 <PrimeInputText v-model="filters['global'].value" placeholder="Search..." />
@@ -212,14 +188,6 @@ initFilters()
                             </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn header="Avatar" headerStyle="width:14%; min-width:10rem;" >
-                        <template #body="slotProps">
-                           <div>
-                                <span class="md:hidden font-bold absolute">Avatar: </span>
-                                <img :src="slotProps.data.avatar ? apiUrl.public.apiBase + slotProps.data.avatar : '/image/avatar-default-icon.png'" alt="avatar" class="shadow-2 w-20 h-20 object-cover ml-32 md:ml-0" width="100" />
-                           </div>
-                        </template>
-                    </PrimeColumn>
                     <PrimeColumn field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
@@ -228,44 +196,31 @@ initFilters()
                             </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="username" header="User name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                           <div class="flex items-center">
-                                <span class="md:hidden font-bold absolute">User name: </span>
-                                <span class="ml-32 md:ml-0">{{ slotProps.data.username }}</span>
-                           </div>
-                        </template>
-                    </PrimeColumn>
-                    <PrimeColumn field="email" header="Emails" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="description" header="Description" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
-                                <span class="md:hidden font-bold absolute">Email: </span>
-                                <span class="ml-32 md:ml-0">{{ slotProps.data.email }}</span>
+                                <span class="md:hidden font-bold absolute">Description: </span>
+                                <span class="ml-32 md:ml-0">{{ slotProps.data.description }}</span>
                             </div>
                         </template>
                     </PrimeColumn>
-                    <!-- <PrimeColumn field="phone" header="Phone" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            {{ slotProps.data.phone }}
-                        </template>
-                    </PrimeColumn> -->
-                    <!-- <PrimeColumn field="roles" header="Roles" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="created" header="Created at" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
-                                <span class="md:hidden font-bold absolute">Roles: </span>
-                                <span class="ml-32 md:ml-0" :class="'product-badge role-' + (slotProps.data.roles ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
-                            </div>
-                        </template>
-                    </PrimeColumn> -->
-                    <PrimeColumn field="status" header="Status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <div class="flex items-center">
-                                <span class="md:hidden font-bold absolute">Status: </span>
-                                <span class="ml-32 md:ml-0" :class="'product-badge role-' + (slotProps.data.status ? slotProps.data.roles.toLowerCase() : '')">{{ slotProps.data.roles }}</span>
+                                <span class="md:hidden font-bold absolute">created: </span>
+                                <span class="ml-32 md:ml-0">{{ slotProps.data.created_at }}</span>
                             </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn headerStyle="min-width:10rem;">
+                    <PrimeColumn field="updated" header="Updated at" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">Updated at: </span>
+                                <span class="ml-32 md:ml-0">{{ slotProps.data.updated_at }}</span>
+                            </div>
+                        </template>
+                    </PrimeColumn>
+                    <PrimeColumn headerStyle="min-width:10rem;" header="Actions">
                         <template #body="slotProps">
                             <PrimeButton severity="info" icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editProduct(slotProps.data)" 
                             :pt="{ 
@@ -276,41 +231,16 @@ initFilters()
                     </PrimeColumn>
                 </PrimeDataTable>
 
-                <PrimeDialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Users Details" :modal="true" class="p-fluid">
-                    <div class="filed mb-4 flex  flex-col items-center justify-center">
-                       <div class="w-28 h-28 overflow-hidden rounded-full mb-4">
-                            <PrimeImage 
-                            :pt="{
-                                image: { class: 'mt-0 mx-auto mb-5 block shadow-2 w-full h-full object-cover' }
-                            }" preview :src="product.avatar ? apiUrl.public.apiBase + product.avatar : '/image/avatar-default-icon.png'" :alt="product.avatar" width="150" />
-                       </div>
-                        <label v-if="!product.avatar" for="avatar" class="mb-4">Avatar</label>
-                        <input type="file" accept="image/*" @change="onUpload" :maxFileSize="1000000">
-                        <!-- <PrimeFileUpload 
-                        :pt="{
-                            root: { class: 'bg-transparent' }
-                        }"
-                        @uploader="onUpload"
-                        mode="basic" accept="image/*" url="/api/upload" :maxFileSize="1000000"  class="mr-2 inline-block"/> -->
-                    </div>
+                <PrimeDialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Category Details" :modal="true" class="p-fluid">
                     <div class="field">
                         <label class="block mb-0.5 text-sm" for="name">Name</label>
                         <PrimeInputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
                     <div class="field">
-                        <label class="block mb-0.5 text-sm" for="username">User name</label>
-                        <PrimeInputText id="username" v-model.trim="product.username" required="true" autofocus :class="{ 'p-invalid': submitted && !product.username }" />
-                        <small class="p-invalid" v-if="submitted && !product.username">Username is required.</small>
-                    </div>
-                    <div class="field">
-                        <label class="block mb-0.5 text-sm" for="email">Email</label>
-                        <PrimeInputText id="email" v-model.trim="product.email" required="true" autofocus :class="{ 'p-invalid': submitted && !product.email }" />
-                        <small class="p-invalid" v-if="submitted && !product.email">Email is required.</small>
-                    </div>
-                    <div class="field">
-                        <label class="block mb-0.5 text-sm" for="phone">Phone number</label>
-                        <PrimeInputText id="phone" v-model.trim="product.phone" required="true" autofocus />
+                        <label class="block mb-0.5 text-sm" for="description">Description</label>
+                        <PrimeInputText id="description" v-model.trim="product.description" required="false" autofocus :class="{ 'p-invalid': submitted && !product.description }" />
+                        <small class="p-invalid" v-if="submitted && !product.description">Description is required.</small>
                     </div>
                     <template #footer>
                         <PrimeButton label="Cancel" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="hideDialog"
@@ -348,7 +278,7 @@ initFilters()
                 <PrimeDialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product">Bạn có muốn xóa những users đã chọn không?</span>
+                        <span v-if="product">Bạn có muốn xóa những categories đã chọn không?</span>
                     </div>
                     <template #footer>
                         <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="deleteProductsDialog = false" 

@@ -5,13 +5,30 @@
             <div class="content pt-32">
                 <div class="category-wrapper">
                     <PrimeAccordion :activeIndex="0">
-                        <PrimeAccordionTab v-for="tab in tabs" :key="tab.title" :header="tab.title">
-                            <p class="m-0">{{ tab.content }}</p>
-                            <PrimeAccordion :activeIndex="0">
-                                <PrimeAccordionTab v-for="tab in tabs" :key="tab.title" :header="tab.title">
-                                    <p class="m-0">{{ tab.content }}</p>
-                                </PrimeAccordionTab>
-                            </PrimeAccordion>
+                        <PrimeAccordionTab v-for="tab in items" :key="tab.label" :header="tab.label" :pt="{
+                            headerIcon: {
+                                class: 'hidden'
+                            },
+                            root: {
+                                class: 'bg-transparent'
+                            }
+                        }">
+                            <template v-if="tab?.items?.length">
+                                <PrimeAccordion :activeIndex="0">
+                                        <PrimeAccordionTab v-for="subtab in tab?.items" :key="subtab.label" :header="subtab.label"
+                                        :pt="{
+                                            headerIcon: {
+                                                class: 'hidden'
+                                            },
+                                            root: {
+                                                class: 'bg-transparent'
+                                            }
+                                        }"
+                                        >
+                                            <p v-for="lastsub in subtab.items" class="m-0">{{ lastsub.label }}</p>
+                                        </PrimeAccordionTab>
+                                </PrimeAccordion>
+                            </template>
                         </PrimeAccordionTab>
                     </PrimeAccordion>
                 </div>
@@ -26,11 +43,49 @@
 <script setup>
 import { ref } from 'vue';
 
-const tabs = ref([
-    { title: 'Title 1', content: 'Content 1' },
-    { title: 'Title 2', content: 'Content 2' },
-    { title: 'Title 3', content: 'Content 3' }
-]);
+const items = ref([
+    {
+        label: 'Thông Tin Du Học',
+        items: [
+            {
+                label: 'level-2',
+                items: [
+                    { label: 'level-3' },
+                    { label: 'level-3-1' },
+                    { label: 'level-3-1' },
+                    { label: 'level-3' },
+                ]
+            },
+            {
+                label: 'level-2'
+            },
+            {
+                label: 'level-2'
+            }
+        ]
+    },
+    {
+        label: 'Yêu cầu tư vấn',
+        items: [
+            {
+                label: 'level-2',
+                items: [
+                    { label: 'level-3' },
+                    { label: 'level-3' },
+                    { label: 'level-3-2' },
+                    { label: 'level-3-2' },
+                ]
+            },
+            {
+                label: 'level-2'
+            },
+            {
+                label: 'level-2'
+            }
+        ]
+    },
+    { label: 'Thông Tin Du Học' }
+])
 </script>
 <style scoped>
     .slideout {
@@ -42,7 +97,7 @@ const tabs = ref([
         content: '';
         position: absolute;
         right: 100%;
-        width: 100%;
+        width: 100vw;
         height: 100%;
         backdrop-filter: blur(16px);
         visibility: hidden;

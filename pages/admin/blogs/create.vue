@@ -1,24 +1,28 @@
-<script setup lang="ts">
+<script setup>
     import Editor from 'primevue/editor';
     import { useCategoryStore } from '~~/stores/category';
+    import { useToast } from 'primevue/usetoast';
 
     definePageMeta({
         layout: 'admin'
     });
     
     const categoryStore = useCategoryStore()
-    const postitle = ref('')
-    const editContent = ref('')
+    const toast = useToast();
     const tags = ref([])
     const categories = ref([])
+    const title = ref('')
+    const banner = ref('')
+    const description = ref('')
+    const editContent = ref('')
+    const categoryId = ref();
 
+    const blogStore = useBlogStore()
     const selectedAction = ref('Visible');
     const actions = ref([
         { name: 'Visible', key: 'A' },
         { name: 'Hidden', key: 'P' },
     ]);
-
-    const selectedCategory = ref();
 
     const getCategories = () => {
         categoryStore.getCategories().then((data) => {
@@ -29,18 +33,30 @@
         getCategories()
     });
 
-    const handleFileAdded = (file) => {
-        // Xử lý sự kiện khi ảnh được thêm vào
-        console.log('Image added:', file);
-        // Tải lên ảnh và cập nhật đường dẫn ảnh trong nội dung
-        // uploadImage(file).then((imageUrl) => {
-        //     // Set đường dẫn ảnh trong nội dung
-        //     content.value = content.value + `<img src="${imageUrl}" alt="Uploaded Image" />`;
-        // });
+    const onUpload = (e) => {
+        const file = e.target.files[0]
+        banner.value = file
     };
 
-    const savePost = () => {
-        console.log('editContent:', editContent.value)
+    const savePost = async () => {
+        const formData = new FormData();
+
+        formData.append('title', title.value);
+        formData.append('description', description.value || null);
+        formData.append('banner', banner.value || null );
+        formData.append('content', editContent.value || null);
+        formData.append('category_id', categoryId.value.id);
+
+        if (title.value && editContent.value) {
+            await blogStore.createBlog(formData).then(() => {
+                alert('Bạn đã tạo post thành công!')
+                navigateTo({ path: '/admin/blogs' })
+            }).catch(function(errors) {
+                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
+                console.log(errors)
+            })
+        }
+   
     }
 </script>
 <template>
@@ -62,13 +78,22 @@
                                     <i class="pi pi-align-right" />
                                     <PrimeInputText id="title" :pt="{
                                         root: { class: 'w-full' } 
-                                    }" v-model="postitle" placeholder="Nhập title" />
+                                    }" v-model="title" placeholder="Nhập title" />
+                                </span>
+                            </div>
+                            <div class="field-post flex flex-col mb-8">
+                                <label class="mb-2" for="title">Descriptions</label>
+                                <span class="p-input-icon-left">
+                                    <PrimeTextarea  id="title" :pt="{
+                                        root: { class: 'w-full p-4' },
+                                        input: { class: 'w-full p-4' } 
+                                    }" v-model="description" placeholder="Nhập mô tả" autoResize rows="5" />
                                 </span>
                             </div>
                             <div class="blog banner lg:p-6 bg-white rounded-xl">
                                 <h3 class="mb-2 mt-0">Summary</h3>
                                 <i>Thêm nôi dung của bài post ở đây để hiển thị ra Blog</i>
-                                <Editor class="mt-6" @file-added="handleFileAdded" v-model="editContent" editorStyle="height: 500px" />
+                                <Editor class="mt-6" v-model="editContent" editorStyle="height: 500px" />
                             </div>
                             <div class="action flex justify-end mt-8">
                                 <PrimeButton class="mr-6" @click="savePost" severity="info">Save</PrimeButton>
@@ -87,15 +112,12 @@
                                 </div>
                             </div>
                             <div class="w-full rounded-xl p-8 flex flex-col bg-white mb-6">
-                                <PrimeDropdown v-model="selectedCategory" editable :options="categories" optionLabel="name" placeholder="category" class="w-full mb-4" />
+                                <PrimeDropdown v-model="categoryId" editable :options="categories" optionLabel="name" placeholder="category" class="w-full mb-4" />
                                 <div class="w-full h-px bg-[#ced4da] my-2"></div>
                                 <div class="card relative">
                                         <h4 class="mt-0 mb-4 text-base font-medium">Feature Image</h4>
-                                        <PrimeFileUpload name="demo[]" url="/api/upload" @upload="onAdvancedUpload($event)" :multiple="true" accept="image/*" :maxFileSize="1000000">
-                                            <template #empty>
-                                                <p>Drag and drop files to here to upload.</p>
-                                            </template>
-                                        </PrimeFileUpload>
+                                        <label for="avatar" class="mb-4">Banner</label>
+                                        <input type="file" accept="image/*" @change="onUpload" :maxFileSize="1000000">
                                     </div>
                           
                                 <div class="mt-4">

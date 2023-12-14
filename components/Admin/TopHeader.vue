@@ -58,7 +58,7 @@
     flex items-center">
         <div class="w-80 flex items-center">
             <a href="#" class="logo block rounded-xl">
-                <Logo class="w-14" />
+                <IconLogo class="w-14" />
             </a>
         </div>
         <div class="flex cursor-pointer items-center dark:bg-transparent dark:text-[#fff9] mr-4" >

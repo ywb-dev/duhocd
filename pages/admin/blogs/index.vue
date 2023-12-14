@@ -8,31 +8,20 @@ definePageMeta({
     layout: 'admin'
 })
 
-const toast = useToast();
 const blogStore = useBlogStore()
 const blogs = ref(null);
-const productDialog = ref(false);
-const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
-const product = ref({});
 const selectedProducts = ref(null);
 const dt = ref(null);
 const filters = ref({});
 const stt = 1
-const submitted = ref(false);
+const apiUrl = useRuntimeConfig()
 
 const getBlogs = () => {
     blogStore.getBlogs().then((data) => {
         blogs.value = data;
     });
 }
-
-const getDefaultAvatar = async () => {
-  const defaultAvatarPath = '/image/avatar-default-icon.png';
-  const response = await fetch(defaultAvatarPath);
-  const blob = await response.blob();
-  return blob;
-};
 
 onBeforeMount(() => {
     initFilters();
@@ -42,91 +31,12 @@ onMounted(() => {
     getBlogs()
 });
 
-const saveProduct = async () => {
-    submitted.value = true; 
-    const formData = new FormData();
-
-    if (product.value.avatar) {
-        formData.append('avatar', product.value.avatar);
-    } else {
-        const defaultAvatarBlob = await getDefaultAvatar();
-        formData.append('avatar', defaultAvatarBlob, 'avatar-default-icon.png');
-    }
-
-    formData.append('avatar', product.value.avatar || null);
-    formData.append('name', product.value.name || null);
-    formData.append('username', product.value.username || null );
-    formData.append('email', product.value.email || null);
-    formData.append('phone', product.value.phone || '000000000');
-
-    if (product.value.email && product.value.email.trim() && product.value.username) {
-        if (product.value.id) {
-            await blogStore.editUser(product.value.id, product.value).then(() => {
-                toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });  
-                getBlogs()
-            }).catch(function(errors) {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
-                console.log(errors)
-            })
-        } else {        
-            await blogStore.createUser(formData).then(() => {
-                toast.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });  
-                getBlogs()
-            }).catch(function(errors) {
-                console.log(errors)
-                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
-            })
-        }
-        productDialog.value = false;
-        product.value = {};
-    }
-};
-
-const editProduct = (editProduct) => {
-    product.value = { ...editProduct };
-    productDialog.value = true;
-};
-
-const confirmDeleteProduct = (editProduct) => {
-    product.value = editProduct;
-    deleteProductDialog.value = true;
-};
-
-const deleteProduct = () => {
-    blogs.value = blogs.value.filter((val) => val.id !== product.value.id);
-    blogStore.deleteUser(product.value.id).then(()=> {
-        toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
-    }) 
-    .catch(function (error) {
-        console.log(error);
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
-    });
-    deleteProductDialog.value = false;
-    product.value = {};
-};
-
 const exportCSV = () => {
     dt.value.exportCSV();
 };
 
 const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
-};
-const deleteSelectedProducts = () => {
-    blogs.value = blogs.value.filter((val) => {
-       return !selectedProducts.value.includes(val)
-    });
-
-    const userIds = selectedProducts.value.map(user => user.id);
-  
-    blogStore.deleteSelectUser(userIds).then(()=> {
-        toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
-    }).catch(function(error) {
-        console.log(error)
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
-    })
-    deleteProductsDialog.value = false;
-    selectedProducts.value = null;
 };
 
 const initFilters = () => {
@@ -194,7 +104,7 @@ initFilters()
                         <template #body="slotProps">
                            <div>
                                 <span class="md:hidden font-bold absolute">Banner: </span>
-                                <img :src="'/image/avatar-default-icon.png'" alt="avatar" class="shadow-2 w-40 h-40 rounded overfow-hidden object-cover ml-32 md:ml-0" width="100" />
+                                <img :src="slotProps.data.banner ? apiUrl.public.apiBase + slotProps.data.banner : '/'"  alt="avatar" class="shadow-2 w-40 h-40 rounded overfow-hidden object-cover ml-32 md:ml-0" width="100" />
                            </div>
                         </template>
                     </PrimeColumn>

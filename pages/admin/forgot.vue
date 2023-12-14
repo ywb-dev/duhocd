@@ -21,7 +21,7 @@
 <template>
     <div class="flex flex-col items-center justify-center m-auto ">
         <div class="logo mb-5 flex-shrink-0">
-            <Logo class="w-[70px]"/>
+            <IconLogo class="w-[70px]"/>
         </div>
         <div class="rounded-[56px] p-[0.25rem] bg-gradient">
             <div class="box rounded-[56px] px-6 py-16 md:px-14 min-w-[374px] md:min-w-[400px] bg-white">

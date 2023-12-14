@@ -17,5 +17,17 @@ export const useBlogStore = defineStore('blog', () => {
         return blogs
     }
 
-    return { getBlogs }
+    const createBlog = async (payload) => {
+        const users = await $axios.post('/api/blog', payload)
+            .then((result) => {
+                return result?.data?.data
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        return users
+    }
+
+    return { getBlogs, createBlog }
 })

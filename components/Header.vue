@@ -1,9 +1,9 @@
 <template>
     <header :class="{ 'navopen': navopen}" class="block w-full">
         <div :class="{ headerSticky: isSticky }" class="header fixed w-full z-20">
-            <div class="header__inner flex items-center justify-between w-full container py-5 md:py-8 ">
+            <div class="header__inner flex items-center justify-between w-full container pt-4 pb-2.5 lg:pt-5 lg:py-8">
                 <a href="#">
-                    <IconLogo class="w-[64px] lg:w-[84px]"/>
+                    <IconLogo class="w-12 h-12 lg:w-[84px] lg:h-[84px]"/>
                 </a>
                 <div
                     class="w-full flex items-center justify-between lg:border-t-0 lg:border-l-0 lg:border-r-0 lg:border-b lg:border-solid lg:border-textPrimary">
@@ -103,8 +103,8 @@
         .nav-button {
             display: inline-block;
             vertical-align: middle;
-            width: 40px;
-            height: 40px;
+            width: 20px;
+            height: 12px;
             cursor: pointer;
             position: relative;
             margin-left: 1.5em;
@@ -125,18 +125,25 @@
             border-radius: 2px;
         }
 
+        .nav-button span::before,
+        .nav-button span::after {
+            width: 15px;
+        }
+
+        .nav-button span {
+            width: 20px; 
+        }
+
         .nav-button span::before {
             content: "";
-            top: -12px;
-            width: 50%;
+            top: -6px;
             left: 0;
             transition: top 0.3s, transform 0.3s, width 0.3s 0.3s;
         }
 
         .nav-button span::after {
             content: "";
-            top: 12px;
-            width: 50%;
+            top: 6px;
             right: 0%;
             left: auto;
             transition: top 0.3s, transform 0.3s, left 0.3s, width 0.3s 0s;

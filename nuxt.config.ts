@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   },
   modules: [
     'nuxt-primevue',
+    'nuxt-swiper',
     '@vee-validate/nuxt',
     '@pinia/nuxt'
   ],
@@ -34,7 +35,9 @@ export default defineNuxtConfig({
     //'primevue/resources/themes/lara-light-teal/theme.css', 
     'primevue/resources/themes/saga-blue/theme.css',
     'primevue/resources/primevue.min.css',
-    'primeicons/primeicons.css'
+    'primeicons/primeicons.css',
+    'swiper/css',
+    'swiper/css/navigation'
   ],
   veeValidate: {
     autoImports: true,
@@ -44,6 +47,11 @@ export default defineNuxtConfig({
       FieldArray: 'VeeFieldArray',
       ErrorMessage: 'VeeErrorMessage',
     },
+  },
+  swiper: {
+    // Swiper options
+    //----------------------
+    styleLang: 'css', // all modules are imported by default
   },
   imports: {
     dirs: ['stores'],

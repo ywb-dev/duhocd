@@ -1,6 +1,6 @@
 <template>
     <li class="menu-item block">
-        <NuxtLink :class="{ 'root-category tab': isRoot }" class="text-base font-black text-textPrimary py-2.5 px-5 block" :to="index === 0 ? '/' : '/'">{{ item?.label }}</NuxtLink>
+        <NuxtLink :class="{ 'root-category tab': isRoot }" class="text-base font-black text-textPrimary py-2.5 px-5 block" :to="index === 0 ? '/admin' : '/admin/login'">{{ item?.label }}</NuxtLink>
         <template v-if="item.items" >
             <ul class="mega-menu-content z-10 pb-5 bg-white">
                 <menu-item v-for="subItem in item.items" :key="subItem?.label" :item="subItem"></menu-item>

@@ -1,7 +1,6 @@
 <script setup>
 import { FilterMatchMode } from 'primevue/api';
 import { onBeforeMount } from 'vue';
-import { useToast } from 'primevue/usetoast';
 import { useBlogStore } from '~~/stores/blog';
 
 definePageMeta({
@@ -30,6 +29,12 @@ onBeforeMount(() => {
 onMounted(() => {
     getBlogs()
 });
+
+const editBlog = (editBlog) => {
+   const id = editBlog.id
+
+   return navigateTo(`/admin/blogs/${id}`)
+};
 
 const exportCSV = () => {
     dt.value.exportCSV();
@@ -134,7 +139,7 @@ initFilters()
                     </PrimeColumn>
                     <PrimeColumn headerStyle="min-width:10rem;" header="Action">
                         <template #body="slotProps">
-                            <PrimeButton severity="info" icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editProduct(slotProps.data)" 
+                            <PrimeButton severity="info" icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editBlog(slotProps.data)" 
                             :pt="{ 
                                 root: { class: 'bg-primary' } 
                             }"/>

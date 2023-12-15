@@ -13,8 +13,8 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-primevue',
     'nuxt-swiper',
-    '@vee-validate/nuxt',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@vee-validate/nuxt', 
   ],
    pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
@@ -45,12 +45,10 @@ export default defineNuxtConfig({
       Form: 'VeeForm',
       Field: 'VeeField',
       FieldArray: 'VeeFieldArray',
-      ErrorMessage: 'VeeErrorMessage',
+      ErrorMessage: 'VeeErrorMessage'
     },
   },
   swiper: {
-    // Swiper options
-    //----------------------
     styleLang: 'css', // all modules are imported by default
   },
   imports: {

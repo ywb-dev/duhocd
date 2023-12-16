@@ -38,9 +38,6 @@ const getDefaultAvatar = async () => {
 
 onBeforeMount(() => {
     initFilters();
-});
-
-onMounted(() => {
     getUsers()
 });
 

@@ -6,7 +6,7 @@ const $axios = axios().provide.axios;
 export const useBlogStore = defineStore('blog', () => {
 
     const getBlog = async (id) => {
-        const blogs = await $axios.get(`/api/blog/${id}`)
+        const blogs = await $axios.get(`/api/post/${id}`)
             .then((result) => {
                 return result?.data?.data
             })
@@ -18,7 +18,7 @@ export const useBlogStore = defineStore('blog', () => {
     }
     
     const getBlogs = async () => {
-        const blogs = await $axios.get('/api/blog')
+        const blogs = await $axios.get('/api/post')
             .then((result) => {
                 return result?.data?.data
             })
@@ -30,7 +30,7 @@ export const useBlogStore = defineStore('blog', () => {
     }
 
     const createBlog = async (payload) => {
-        const users = await $axios.post('/api/blog', payload)
+        const blogs = await $axios.post('/api/post', payload)
             .then((result) => {
                 return result?.data?.data
             })
@@ -38,11 +38,11 @@ export const useBlogStore = defineStore('blog', () => {
                 console.log(error);
             });
 
-        return users
+        return blogs
     }
 
     const editBlog = async (id, payload) => {
-        const users = await $axios.put(`/api/blog/${id}`, payload)
+        const blogs = await $axios.put(`/api/post/${id}`, payload)
             .then((result) => {
                 return result?.data?.data
             })
@@ -50,8 +50,21 @@ export const useBlogStore = defineStore('blog', () => {
                 console.log(error);
             });
 
-        return users
+        return blogs
     }
 
-    return { getBlogs, createBlog, getBlog, editBlog }
+    
+    const deleteBlog = async (id) => {
+        const blogs = await $axios.delete(`/api/post/${id}`)
+            .then((result) => {
+                return result?.data?.data
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        return blogs
+    }
+
+    return { getBlogs, createBlog, getBlog, editBlog, deleteBlog }
 })

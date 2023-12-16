@@ -2,47 +2,65 @@
 import { FilterMatchMode } from 'primevue/api';
 import { onBeforeMount } from 'vue';
 import { useBlogStore } from '~~/stores/blog';
+import { useToast } from 'primevue/usetoast';
 
 definePageMeta({
     layout: 'admin'
 })
 
-const blogStore = useBlogStore()
 const blogs = ref(null);
-const deleteProductsDialog = ref(false);
+const blog = ref('')
 const selectedProducts = ref(null);
-const dt = ref(null);
 const filters = ref({});
+const deleteProductDialog = ref(false);
+const dt = ref(null);
 const stt = 1
 const apiUrl = useRuntimeConfig()
+const toast = useToast();
 
+// Export csv
+const exportCSV = () => {
+    dt.value.exportCSV();
+};
+
+// Handle call api
+const blogStore = useBlogStore()
+
+// Gets all blogs
 const getBlogs = () => {
     blogStore.getBlogs().then((data) => {
         blogs.value = data;
     });
 }
 
-onBeforeMount(() => {
-    initFilters();
-});
+// Handle delete
+const confirmDeleteBlog = async(dataBlog) => {
+    deleteProductDialog.value = true;
+    blog.value = dataBlog
+};
 
-onMounted(() => {
-    getBlogs()
-});
+const deleteBlog = () => {
+    blogStore.deleteBlog(blog.value.id).then(()=> {
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Blog đã xóa thành công', life: 3000 });
+        deleteProductDialog.value = false;
+    }) 
+    .catch(function (error) {
+        console.log(error);
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
+    });
+};
 
+// Redirect to blog detail 
 const editBlog = (editBlog) => {
    const id = editBlog.id
-
    return navigateTo(`/admin/blogs/${id}`)
 };
 
-const exportCSV = () => {
-    dt.value.exportCSV();
-};
-
-const confirmDeleteSelected = () => {
-    deleteProductsDialog.value = true;
-};
+// Call func befere mouted
+onBeforeMount(() => {
+    initFilters();
+    getBlogs()
+});
 
 const initFilters = () => {
     filters.value = {
@@ -61,7 +79,7 @@ initFilters()
                     <template v-slot:start>
                         <div class="my-2 flex flex-wrap">
                             <NuxtLink to="/admin/blogs/create" class=" button-animate"><span><i class="pi pi-plus"></i></span><span class="ml-1.5">Create</span></NuxtLink>
-                            <PrimeButton severity="danger" label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+                            <PrimeButton severity="danger" label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger" @click="" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
@@ -109,7 +127,7 @@ initFilters()
                         <template #body="slotProps">
                            <div>
                                 <span class="md:hidden font-bold absolute">Banner: </span>
-                                <img :src="slotProps.data.banner ? apiUrl.public.apiBase + slotProps.data.banner : '/'"  alt="avatar" class="shadow-2 w-40 h-40 rounded overfow-hidden object-cover ml-32 md:ml-0" width="100" />
+                                <img :src="slotProps.data.banner ? apiUrl.public.apiBase + slotProps.data.banner : '/'"  alt="avatar" class="shadow-2 w-40 h-40 rounded overfow-hidden object-cover ml-32 md:ml-0" width="100" loading="lazy"/>
                            </div>
                         </template>
                     </PrimeColumn>
@@ -143,10 +161,30 @@ initFilters()
                             :pt="{ 
                                 root: { class: 'bg-primary' } 
                             }"/>
-                            <PrimeButton severity="danger" icon="pi pi-trash" class="p-PrimeButton-rounded p-PrimeButton-warning mt-2" @click="confirmDeleteProduct(slotProps.data)" />
+                            <PrimeButton severity="danger" icon="pi pi-trash" class="p-PrimeButton-rounded p-PrimeButton-warning mt-2" @click="confirmDeleteBlog(slotProps.data)" />
                         </template>
                     </PrimeColumn>
                 </PrimeDataTable>
+                <PrimeDialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+                    <div class="flex align-items-center justify-content-center">
+                        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                        <span v-if="blog"
+                            >Bạn có chắc là muốn xóa <b>{{ blog.title }}</b
+                            > không?</span
+                        >
+                    </div>
+                    <template #footer>
+                        <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="deleteProductDialog = false" 
+                        :pt="{ 
+                            label: { class: 'font-semibold' } 
+                        }"/>
+                        <PrimeButton label="Yes" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="deleteBlog" 
+                        :pt="{ 
+                            label: { class: 'font-semibold' } 
+                        }"
+                        />
+                    </template>
+                </PrimeDialog>
             </div>
         </div>
     </div>

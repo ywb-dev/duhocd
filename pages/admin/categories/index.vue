@@ -29,11 +29,9 @@ const getCategories = () => {
 
 onBeforeMount(() => {
     initFilters();
-});
-
-onMounted(() => {
     getCategories()
 });
+
 
 const openNew = () => {
     product.value = {};
@@ -55,7 +53,8 @@ const saveProduct = async () => {
 
     if (product.value.name && product.value.name.trim()) {
         if (product.value.id) {
-            await categoryStore.editCategory(product.value.id, product.value).then(() => {
+            await categoryStore.editCategory(product.value.id, product.value).then((data) => {
+                console.log('data:', data)
                 toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });  
                 getCategories()
             }).catch(function(errors) {

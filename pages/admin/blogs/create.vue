@@ -2,6 +2,7 @@
 import Editor from 'primevue/editor';
 import { useCategoryStore } from '~~/stores/category';
 import { useToast } from 'primevue/usetoast';
+import { ref, onMounted, watch } from 'vue';
 
 definePageMeta({
     layout: 'admin'
@@ -17,6 +18,9 @@ const title = ref('')
 const content = ref('')
 const categoryId = ref();
 const errorsMessage = ref('')
+const showModal = ref(false);
+const isDataChanged = ref(false);
+const nextAction = ref(null);
 
 // validate form
 const handleValidate = () => {
@@ -43,10 +47,35 @@ const getCategories = () => {
 onMounted(() => {
     getCategories()
 });
-
 const onUpload = (e) => {
     const file = e.target.files[0]
     banner.value = file
+};
+
+// kiểm tra xem dữ liệu đã được lưu chưa
+watch([title, description, content, categoryId, banner], () => {
+    isDataChanged.value = true;
+}, { deep: true });
+
+onBeforeRouteLeave((to, from, next) => {
+    if (isDataChanged.value) {
+        showModal.value = true;
+        nextAction.value = next;
+    } else {
+        next();
+    }
+});
+
+const leavePage = () => {
+    showModal.value = false;
+    if (nextAction.value) {
+        nextAction.value();
+        nextAction.value = null;
+    } else {
+        // Chuyển hướng mặc định khi không có hành động chuyển hướng cụ thể
+        navigateTo('/admin/blogs')
+    }
+    isDataChanged.value = false;
 };
 
 const savePost = async () => {
@@ -61,13 +90,15 @@ const savePost = async () => {
         formData.append('category_id', categoryId.value.id);
 
         await blogStore.createBlog(formData).then(() => {
+            isDataChanged.value = false;
             alert('Bạn đã tạo post thành công!')
-            navigateTo({ path: '/admin/blogs' })
+            leavePage();
         }).catch(function (errors) {
             toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
             console.log(errors)
         })
     }
+    return true
 }
 </script>
 <template>
@@ -161,6 +192,23 @@ const savePost = async () => {
                     </div>
                 </div>
             </div>
+            <PrimeDialog v-model:visible="showModal" modal :style="{ width: '450px' }" header="Warning">
+                <div class="flex align-items-center justify-content-center">
+                    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                    <span>
+                        Bạn vừa có thay đổi chưa lưu. Bạn có chắc là muốn thoát không?</span>
+                </div>
+                <template #footer>
+                    <PrimeButton label="Discard" @click="leavePage" icon="pi pi-times" severity="info" outlined
+                        class="p-PrimeButton-text" :pt="{
+                            label: { class: 'font-semibold' }
+                        }" />
+                    <PrimeButton label="Save Post" icon="pi pi-check" @click="savePost" severity="info" outlined
+                        class="p-PrimeButton-text" :pt="{
+                            label: { class: 'font-semibold' }
+                        }" />
+                </template>
+            </PrimeDialog>
         </div>
     </div>
 </template>

@@ -14,7 +14,7 @@ const selectedProducts = ref(null);
 const filters = ref({});
 const deleteProductDialog = ref(false);
 const dt = ref(null);
-const stt = 1
+let stt = 1
 const apiUrl = useRuntimeConfig()
 const toast = useToast();
 

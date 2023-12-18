@@ -18,7 +18,7 @@ const product = ref({});
 const selectedProducts = ref(null);
 const dt = ref(null);
 const filters = ref({});
-const stt = 1
+let stt = 1
 const submitted = ref(false);
 
 const apiUrl = useRuntimeConfig()

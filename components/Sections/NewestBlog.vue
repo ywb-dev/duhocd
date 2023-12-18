@@ -5,7 +5,7 @@
                 <TitleSection heading="Thông Tin Du Học Mới Nhất" link="#"/>
                 <div class="flex flex-col md:flex-row justify-between pt-6 md:pt-12 pb-12 md:pb-16">
                     <NuxtLink to="/" class="left-banner min-h-[327px] overflow-hidden flex-1 bg-grey-400 rounded-2xl md:mr-5 border border-solid border-textPrimary mb-5 md:mb-0">
-                        <img class="w-full h-full object-cover" width="548" height="327" src="/" alt="Banner Post ">
+                        <img class="w-full h-full object-cover" width="548" height="327" src="" alt="Banner Post ">
                     </NuxtLink>
                     <div class="right-context md:max-w-[388px] w-full">
                         <PrimeAccordion :activeIndex="0">

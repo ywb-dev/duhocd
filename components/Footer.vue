@@ -25,7 +25,7 @@
                         <div class="flex flex-col w-full px-2 py-4 md:py-8">
                             <h4 class="m-0 lg:mb-6">Company</h4>
                             <ul class="p-0">
-                                <li class="block"><NuxtLink class="text-white py-2 block font-normal text-[10px] tracking-[0.45px]" to="/blog">About us</NuxtLink></li>
+                                <li class="block"><NuxtLink class="text-white py-2 block font-normal text-[10px] tracking-[0.45px]" to="#">About us</NuxtLink></li>
                                 <li class="block"><NuxtLink class="text-white py-2 block font-normal text-[10px] tracking-[0.45px]" to="#">Contact</NuxtLink></li>
                                 <li class="block"><NuxtLink class="text-white py-2 block font-normal text-[10px] tracking-[0.45px]" to="#">Privacy Policy</NuxtLink></li>
                                 <li class="block"><NuxtLink class="text-white py-2 block font-normal text-[10px] tracking-[0.45px]" to="#">Service Plicy</NuxtLink></li>

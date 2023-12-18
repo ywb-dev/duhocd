@@ -1,0 +1,298 @@
+/* Tailwind Link */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* For rgb(255 115 179 / <alpha-value>) */
+    --color-primary: #67a9e7;
+    --color-text-primary: #1B80CA;
+  }
+}
+
+/* Fonts Be Vietnam Pro */
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+   url("/fonts/BeVietnamPro-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+  url("/fonts/BeVietnamPro-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+  url("/fonts/BeVietnamPro-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+   url("/fonts/BeVietnamPro-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+   url("/fonts/BeVietnamPro-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+   url("/fonts/BeVietnamPro-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+   url("/fonts/BeVietnamPro-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+    url("/fonts/BeVietnamPro-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src:
+   url("/fonts/BeVietnamPro-Bold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Poppins */
+/* @font-face {
+  font-family: "Poppins";
+  src:
+   url(./fonts/Poppins-Regular.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src:
+   url(./fonts/Poppins-SemiBold.ttf) format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src:
+   url(./fonts/Poppins-Bold.ttf) format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+} */
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+/* Reset Css */
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+button {
+  appearance: none;
+  border: 0;
+}
+
+
+/* Table PrimeVue / Resopnsive */
+.p-column-title {
+  font-size: 15px;
+}
+
+.p-sortable-column-icon {
+  width: 12px;
+}
+
+.p-paginator-current,
+.p-datatable-tbody td {
+  font-size: 14px;
+}
+         
+td .p-button.p-component{
+  width: 34px;
+  height: 34px;
+}
+
+td .p-button-icon {
+  font-size: 14px;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  font-size: 14px;
+}
+
+/* Responsive table */
+@media (max-width: 767px) {
+    .p-datatable-table {
+      width: 100%;
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    .p-datatable-thead {
+      display: none;
+    }
+
+    .p-datatable-thead > tr {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+
+    }
+
+    .p-datatable-tbody {
+      flex: 1;
+    }
+
+    .p-datatable-tbody > tr {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+      border: 1px solid #67a9e7;
+    }
+
+    .p-datatable-header {
+      border: 1px solid #e9ecef;
+    }
+}
+
+/* Button Animation */
+
+.button-animate {
+  display: flex;
+  margin-right: 8px;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  background-color: #67a9e7;
+  transition: all ease-in 0.3s;
+  border-radius: 4px;
+  color: white;
+}
+
+.button-animate:hover {
+  box-shadow: 0 0 0 0.2rem #89d4fe;
+}
+
+.button-animate::after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.5s;
+  box-shadow: 0 0 10px 10px #67a9e7;
+}
+
+.button-animate:active::after {
+  box-shadow: 0 0 0 0 #67a9e7;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top:0;
+  opacity: 1;
+  transition: 0s;
+}
+
+/* Style guide */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 985px;
+}
+
+a {
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p {
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.tab {
+  position: relative;
+  border: 1px solid #1B80CA;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom: 0;
+  transition: all ease-in .6s;
+}

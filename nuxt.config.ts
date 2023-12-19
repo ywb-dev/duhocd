@@ -56,7 +56,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: 'http://api.duhocd.com/'
+      apiBase: 'https://api.duhocd.com/'
     }
   }
 })

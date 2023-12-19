@@ -92,4 +92,8 @@
     .bg-gradient {
         background: linear-gradient(180deg, #63c2f1 10%, rgba(33, 150, 243, 0) 30%);
     }
+
+    .p-password-input { 
+        width: 100%;
+    }
 </style>

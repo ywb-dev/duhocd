@@ -17,8 +17,8 @@ export const useBlogStore = defineStore('blog', () => {
         return blogs
     }
     
-    const getBlogs = async () => {
-        const blogs = await $axios.get('/api/post')
+    const getBlogs = async (page) => {
+        const blogs = await $axios.get(`/api/post?page=${page}`)
             .then((result) => {
                 return result?.data?.data
             })

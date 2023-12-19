@@ -20,7 +20,7 @@ const model = ref([
             {
                 label: 'Landing',
                 icon: 'pi pi-fw pi-globe',
-                to: 'https://www.duhocd.com/'
+                to: 'https://www.landing.duhocd.com/'
             }
         ]
      }

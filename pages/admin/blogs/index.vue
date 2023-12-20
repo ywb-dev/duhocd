@@ -10,13 +10,14 @@ definePageMeta({
 
 const blogs = ref(null);
 const blog = ref('')
-const selectedProducts = ref(null);
+const selectedBlogs = ref(null);
 const filters = ref({});
 const deleteProductDialog = ref(false);
 const dt = ref(null);
 let stt = 1
 const apiUrl = useRuntimeConfig()
 const toast = useToast();
+const pagination = ref({})
 
 // Export csv
 const exportCSV = () => {
@@ -27,9 +28,11 @@ const exportCSV = () => {
 const blogStore = useBlogStore()
 
 // Gets all blogs
-const getBlogs = () => {
-    blogStore.getBlogs().then((data) => {
-        blogs.value = data;
+const getBlogs = (page) => {
+    blogStore.getBlogs(page).then((res) => {
+        console.log('data:', res)
+        blogs.value = res.data;
+        pagination.value = res
     });
 }
 
@@ -59,8 +62,11 @@ const editBlog = (editBlog) => {
 // Call func befere mouted
 onBeforeMount(() => {
     initFilters();
-    getBlogs()
 });
+
+onMounted(() => {   
+    getBlogs(1)
+})
 
 const initFilters = () => {
     filters.value = {
@@ -78,8 +84,7 @@ initFilters()
                 <PrimeToolbar class="mb-4 dark:bg-boxDarkMode flex-wrap">
                     <template v-slot:start>
                         <div class="my-2 flex flex-wrap">
-                            <NuxtLink to="/admin/blogs/create" class=" button-animate"><span><i class="pi pi-plus"></i></span><span class="ml-1.5">Create</span></NuxtLink>
-                            <PrimeButton severity="danger" label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger" @click="" :disabled="!selectedProducts || !selectedProducts.length" />
+                            <NuxtLink to="/admin/blogs/create" class=" button-animate overflow-hidden"><span><i class="pi pi-plus"></i></span><span class="ml-1.5">Create</span></NuxtLink>
                         </div>
                     </template>
 
@@ -94,10 +99,9 @@ initFilters()
                 <PrimeDataTable
                     ref="dt"
                     :value="blogs"
-                    v-model:selection="selectedProducts"
+                    v-model:selection="selectedBlogs"
                     dataKey="id"
-                    :paginator="true"
-                    :rows="10"
+                    :paginator="false"
                     :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPagePrimeDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
@@ -185,6 +189,7 @@ initFilters()
                         />
                     </template>
                 </PrimeDialog>
+                <AdminPagination :pagination="pagination" @page-changed="getBlogs"/>
             </div>
         </div>
     </div>

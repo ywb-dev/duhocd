@@ -2,7 +2,7 @@
     <section>
         <div class="relative container newest-blog-text">
             <div class="blog-text__inner">
-                <TitleSection heading="Thông Tin Du Học Mới Nhất" link="#" />
+                <TitleSection heading="Bài viết gần đây" link="#" />
                 <div class="flex flex-col py-8 md:py-12">
                     <NuxtLink to="/" class="flex md:items-center flex-col md:flex-row mb-4">
                         <p class="text-desc flex-1 text-base text-black font-medium">Sagittis aliquam malesuada bibendum arcu vitae elementum curabitur. agittis aliquam malesuada bibendum arcu vitae elementum curabitur agittis aliquam malesuada bibendum arcu vitae elementum curabitur agittis aliquam malesuada bibendum arcu vitae elementum curabitur</p>

@@ -18,9 +18,16 @@ const model = ref([
         to: '/pages',
         items: [
             {
-                label: 'Landing',
+                label: 'duhocd.com',
                 icon: 'pi pi-fw pi-globe',
-                to: 'https://www.duhocd.com/'
+                to: 'https://duhocd.com/',
+                target_blank: true
+            },
+            {
+                label: 'Duhocd landing',
+                icon: 'pi pi-fw pi-globe',
+                to: 'https://www.landing.duhocd.com/',
+                target_blank: true
             }
         ]
      }
@@ -28,7 +35,7 @@ const model = ref([
 const activeSibar = useActive()  
 </script>
 <template>
-    <div :class="activeSibar ? 'translate-x-0 lg:-translate-x-[110%] lg:left-0' : '-translate-x-full lg:translate-x-0'" class="layout-sidebar fixed left-0 top-0 lg:top-auto lg:left-auto w-80 z-100 h-full lg:max-h-[80vh] z-[999] lg:z-10 overflow-y-auto transition-all duration-300 bg-[#fff] px-6 py-2 rounded-xl dark:bg-boxDarkMode">
+    <div :class="activeSibar ? 'translate-x-0 lg:-translate-x-[110%] lg:left-0' : '-translate-x-full lg:translate-x-0'" class="layout-sidebar fixed left-0 top-0 lg:top-auto lg:left-auto w-80 z-100 h-full lg:max-h-[80vh] z-[999] lg:z-10 overflow-y-auto transition-all duration-300 bg-[#fff] px-6 py-6 rounded-xl dark:bg-boxDarkMode">
         <ul class="layout-menu m-0 p-0">
             <ul class="layout-menu">
                 <template v-for="(item, i) in model" :key="item">

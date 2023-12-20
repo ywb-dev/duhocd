@@ -57,9 +57,11 @@
                         </div>
                         <div class="field flex flex-col">
                             <label class="text-sm" for="pw">Password</label>
-                            <PrimePassword :pt="{
+                            <PrimePassword 
+                                :pt="{
                                     input: { class: 'font-normal w-full border border-border-field rounded px-4 py-2.5 text-sm text-black hover:border-primary' },
-                                }" id="pw" v-model="value" toggleMask type="text" :class="{ 'p-invalid rounded': errorMessage }" aria-describedby="text-error" />
+                                }" 
+                                id="pw" v-model="value" toggleMask type="text" :class="{ 'p-invalid rounded': errorMessage }" aria-describedby="text-error" />
                             <small class="p-error" id="text-error">{{ errorMessage || '&nbsp;' }}</small>
                         </div>
                         <div class="flex justify-between">
@@ -85,11 +87,15 @@
         </div>
     </div>
 </template>
-<style scoped>
+<style >
     .p-invalid {
         border: 1px solid red;
     }
     .bg-gradient {
         background: linear-gradient(180deg, #63c2f1 10%, rgba(33, 150, 243, 0) 30%);
+    }
+
+    .p-password-input { 
+        width: 100%;
     }
 </style>

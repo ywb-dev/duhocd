@@ -62,7 +62,7 @@
             </a>
         </div>
         <div class="flex cursor-pointer items-center dark:bg-transparent dark:text-[#fff9] mr-4" >
-            <div @click="toggleActive" :class="{ 'active': activeSibar }" class="icon">
+            <div @click="toggleActive" :class="{ 'active': activeSibar }" class="icon !ml-0">
                 <div class="bar"></div>
                 <div class="bar mdl"></div>
                 <div class="bar"></div>

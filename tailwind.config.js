@@ -21,6 +21,7 @@ export default {
         bgDark: '#144162',
         grey: {
           400: '#C8C8C8',
+          500: '#D9D9D9'
         }
       },
       fontSize: {

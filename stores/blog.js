@@ -4,67 +4,68 @@ import { defineStore } from "pinia";
 const $axios = axios().provide.axios;
 
 export const useBlogStore = defineStore('blog', () => {
+    const processResponse = (response) => response?.data;
+
+    const handleApiError = (error) => {
+        console.error('API Error:', error);
+    }
 
     const getBlog = async (id) => {
-        const blogs = await $axios.get(`/api/post/${id}`)
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        try {
+            const response = await $axios.get(`/api/post/${id}`);
+            return processResponse(response?.data);
+        } catch (error) {
+            handleApiError(error);
+        }
+    };
 
-        return blogs
-    }
-    
+
     const getBlogs = async (page) => {
-        const blogs = await $axios.get(`/api/post?page=${page}`)
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        return blogs
+        try {
+            const response = await $axios.get(`/api/post?page=${page}`);
+            return processResponse(response?.data);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
     const createBlog = async (payload) => {
-        const blogs = await $axios.post('/api/post', payload)
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        return blogs
+        try {
+            const response = await $axios.post('/api/post', payload);
+            return processResponse(response?.data);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
     const editBlog = async (id, payload) => {
-        const blogs = await $axios.put(`/api/post/${id}`, payload)
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        return blogs
+        try {
+            const response = await $axios.put(`/api/post/${id}`, payload);
+            return processResponse(response?.data);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
-    
+
     const deleteBlog = async (id) => {
-        const blogs = await $axios.delete(`/api/post/${id}`)
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        return blogs
+        try {
+            const response = await $axios.delete(`/api/post/${id}`);
+            return processResponse(response?.data);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
-    return { getBlogs, createBlog, getBlog, editBlog, deleteBlog }
+    const getLatestBlogs = async (number) => {
+        try {
+            const response = await $axios.get(`/api/post/latest/${number}`);
+            return processResponse(response);
+        } catch (error) {
+            handleApiError(error);
+        }
+    }
+
+
+    return { getBlogs, createBlog, getBlog, editBlog, deleteBlog, getLatestBlogs }
 })

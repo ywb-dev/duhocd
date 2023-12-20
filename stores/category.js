@@ -4,67 +4,57 @@ import { defineStore } from "pinia";
 const $axios = axios().provide.axios;
 
 export const useCategoryStore = defineStore('category', () => {
+    const processResponse = (response) => response?.data?.data;
+
+    const handleApiError = (error) => {
+        console.error('API Error:', error);
+    }
     
     const getCategories = async () => {
-        const categories = await $axios.get('/api/category')
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        return categories
+        try {
+            const response = await $axios.get('/api/category');
+            return processResponse(response);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
     const createCategory = async (payload) => {
-        const categories = await $axios.post('/api/category', payload)
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        return categories
+        try {
+            const response = await $axios.post('/api/category', payload);
+            return processResponse(response);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
     const editCategory = async (id, payload) => {
-        const categories = await $axios.put(`/api/category/${id}`, payload)
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        return categories
+        try {
+            const response = await $axios.put(`/api/category/${id}`, payload);
+            return processResponse(response);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
     const deleteCategory = async (id) => {
-        const categories = await $axios.delete(`/api/category/${id}`)
-            .then((result) => {
-                return result?.data?.data
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        return categories
+        try {
+            const response = await $axios.delete(`/api/category/${id}`);
+            return processResponse(response);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
     const deleteSelectCategory = async (payload) => {
-        const categories = await $axios.delete('/api/categories/delete', {
-            data: { category_ids: payload },
-        })
-        .then((result) => {
-            return result?.data?.data
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-
-        return categories
+        try {
+            const response = await $axios.delete('/api/categories/delete', {
+                data: { category_ids: payload },
+            });
+            return processResponse(response);
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 
     return { getCategories, createCategory, editCategory, deleteCategory, deleteSelectCategory }

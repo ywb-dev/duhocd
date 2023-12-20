@@ -10,7 +10,7 @@
                 clickable: true,
                 }"
                 :autoplay="{
-                    delay: 4000,
+                    delay: 3000,
                     disableOnInteraction: true,
                 }"
                 :breakpoints="{
@@ -34,15 +34,17 @@
                 :modules="[SwiperAutoplay, SwiperNavigation, SwiperPagination]"
                 class="mySwiper"
             >
-                <swiper-slide v-for=" tab in 8">
+                <swiper-slide v-for=" blog in latestBlog">
                     <div class="relative">
-                        <nuxt-link class="flex relative h-full w-full max-h-[220px] lg:max-h-[220px] max-w-md rounded-2xl overflow-hidden border border-solid border-textPrimary p-2.5" to="/">
+                        <nuxt-link class="flex select-none relative h-full w-full max-h-[220px] lg:max-h-[220px] max-w-md rounded-2xl overflow-hidden border border-solid border-textPrimary p-2.5" to="/">
 
-                            <img width="359" height="185" class="object-cover w-full rounded-2xl overflow-hidden" src="/image/slider1.png" loading="lazy" alt="slider">
+                            <div class="box-text flex w-full rounded-2xl">
+                                <img width="359" height="185" class="object-cover w-full rounded-2xl overflow-hidden" :src="apiUrl.public.apiBase + blog?.banner" loading="lazy" alt="slider">
+                            </div>
                             <div class="flex flex-col justify-end text-left absolute z-50 w-full h-full top-0 left-0 p-10">
-                                <div class="ml-6">
-                                    <h3 class="text-[21px] text-white font-black m-0">Post Title</h3>
-                                    <p class="text-white text-[11px] font-medium">Post description</p>
+                                <div class="">
+                                    <h3 class="text-two-line text-[21px] leading-6 text-white font-black m-0 mb-1">{{ blog?.title }}</h3>
+                                    <p class="text-one-line text-white text-[11px] leading-3 font-medium">{{ blog?.description }}</p>
                                 </div>
                             </div>
                         </nuxt-link>
@@ -52,12 +54,6 @@
         </div>
     </section>
 </template>
-<script setup>
-    // Import Swiper styles
-    import 'swiper/css';
-    import 'swiper/css/navigation';
-
-</script>
 <style>
     .swiper  {
         padding-top: 16px;
@@ -93,5 +89,45 @@
             width: 10px;
             height: 10px;
         }
-    }   
+    } 
+
+    .box-text {
+        position: relative;
+    }
+
+    .box-text::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 1;
+        border-radius: 14px;
+    }
 </style>
+<script setup>
+    // Import Swiper styles
+    import 'swiper/css';
+    import 'swiper/css/navigation';
+
+    const blogStore = useBlogStore()
+    const latestBlog = ref([])
+    const apiUrl = useRuntimeConfig()
+
+    // get 8 Latest blogs
+    const getLatestBlogs = async () => {
+        try {
+            const res = await blogStore.getLatestBlogs(8);
+            console.log('resss:', res)
+            latestBlog.value = res;
+        } catch (error) {
+            console.error('Failed to fetch latest blogs:', error);
+        }
+    };
+   
+    onBeforeMount(() => {
+        getLatestBlogs();
+    })
+</script>

@@ -9,7 +9,6 @@ export const useUserStore = defineStore('user', () => {
     const isLoggedIn = ref(false)
     const users = ref([])
     const tokenCookie = useCookie('token')
-    // const tokenCookie = useCookie('token')
     const router = useRouter()
 
     const login = async (username, password) => {

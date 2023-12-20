@@ -1,15 +1,15 @@
 <template>
     <header :class="{ 'navopen': navopen}" class="block w-full">
         <div :class="{ headerSticky: isSticky }" class="header fixed w-full z-20">
-            <div class="header__inner flex items-center justify-between w-full container pt-4 pb-2.5 lg:pt-5 lg:py-8">
-                <a href="#">
+            <div class="header__inner flex items-center justify-between w-full container pt-4 pb-2.5 lg:pt-5 lg:pt-8 lg:pb-0">
+                <a href="/">
                     <IconLogo class="w-12 h-12 lg:w-[84px] lg:h-[84px]"/>
                 </a>
                 <div
                     class="w-full flex items-center justify-between lg:border-t-0 lg:border-l-0 lg:border-r-0 lg:border-b lg:border-solid lg:border-textPrimary">
                     <MegaMenu />
                     <div class="nav-action ml-auto">
-                        <div class="hidden lg:flex guess items-center justify-center cursor-pointer">
+                        <NuxtLink to="/user/login" class="hidden lg:flex guess items-center justify-center cursor-pointer">
                             <span class="text-xs mr-2 font-medium text-textPrimary">Login</span>
                             <span class="icon">
                                 <svg width="24" height="30" viewBox="0 0 24 30" fill="none"
@@ -37,7 +37,18 @@
                                         stroke="#1B80CA" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </span>
-                        </div>
+                        </NuxtLink>
+                        <!-- <NuxtLink to="/user/login" class="hidden lg:flex guess items-center justify-center cursor-pointer">
+                            <span class="text-xs mr-2 font-medium text-textPrimary">MyPage</span>
+                            <span class="icon">
+                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="15" cy="15" r="14" fill="#E5F3FD" stroke="#1B80CA"/>
+                                    <path d="M14.7493 16C8.59308 16 7.04228 22.0313 7.00086 25.656C6.99537 26.1367 7.19147 26.5986 7.57555 26.8877C8.77601 27.7911 11.2422 29 14.7493 29C18.1914 29 20.8618 27.8355 22.2639 26.9382C22.7526 26.6255 23.0078 26.0679 22.9653 25.4892C22.6982 21.8496 20.812 16 14.7493 16Z" fill="white" stroke="#1B80CA" stroke-linecap="round"/>
+                                    <circle cx="15" cy="11" r="6" fill="white" stroke="#1B80CA"/>
+                                </svg>
+                            </span>
+                        </NuxtLink> -->
+                        
                         <client-only>
                             <div class="nav-button" @click="toggleNav"><span></span></div>
                         </client-only>
@@ -84,16 +95,14 @@
 
 <style scoped>
     .header {
-        background-color: white;
-        backdrop-filter: blur(20px);
+        /* background-color: white; */
+        backdrop-filter: blur(16px);
         transition: all .6s;
     }
-
     .headerSticky.headerSticky {
         top: 0;
         opacity: 1;
     }
-
     .navopen .header {
         background-color: transparent;
         backdrop-filter: blur(0);
@@ -111,7 +120,6 @@
             position: relative;
             z-index: 1000;
         }
-
         .nav-button span,
         .nav-button span::before,
         .nav-button span::after {
@@ -124,23 +132,19 @@
             background: #1B80CA;
             border-radius: 2px;
         }
-
         .nav-button span::before,
         .nav-button span::after {
             width: 15px;
         }
-
         .nav-button span {
             width: 20px; 
         }
-
         .nav-button span::before {
             content: "";
             top: -6px;
             left: 0;
             transition: top 0.3s, transform 0.3s, width 0.3s 0.3s;
         }
-
         .nav-button span::after {
             content: "";
             top: 6px;
@@ -148,23 +152,19 @@
             left: auto;
             transition: top 0.3s, transform 0.3s, left 0.3s, width 0.3s 0s;
         }
-
         .nav-button:hover span::after,
         .nav-button:hover span::before {
             width: 100%;
         }
-
         .navopen .nav-button span {
             background-color: transparent;
         }
-
         .navopen .nav-button span::before {
             top: 0;
             transform: rotate(45deg);
             transition-delay: 0s, 0.3s;
             width: 100%;
         }
-
         .navopen .nav-button span::after {
             top: 0;
             transform: rotate(-45deg);

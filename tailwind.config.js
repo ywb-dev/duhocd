@@ -20,8 +20,10 @@ export default {
         textPrimary: '#1B80CA',
         bgDark: '#144162',
         grey: {
+          300: '#eaeaea',
           400: '#C8C8C8',
-          500: '#D9D9D9'
+          500: '#D9D9D9',
+          600: '#AEAEAE'
         }
       },
       fontSize: {

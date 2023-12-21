@@ -2,27 +2,27 @@
     <footer>
         <div class="relative w-full bg-bgDark ">
             <div class="footer__inner">
-                <div class="container py-8 md:py-0">
+                <div class="container py-8 md:py-14">
                     <div class="grid md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-                        <div class="flex flex-col justify-between w-full px-2 py-4 md:py-8">
+                        <div class="flex flex-col justify-between px-2 w-full">
                             <div>
                                 <a class="block mb-4" href="#">
                                     <IconFooterLogo class="w-30"></IconFooterLogo>
                                 </a>
                             </div>
-                            <div>
+                            <div class="mt-12">
                                 <p><a href="#">202 2F, 19, Yanghwa-ro 15an-gil,
                                 Mapo-gu, Seoul, Republic of Korea</a></p>
-                                <p><a href="tel:418-81-56683">Business Registration No. 418-81-56683</a></p>
+                                <p class="mb-0"><a href="tel:418-81-56683">Business Registration No. 418-81-56683</a></p>
                             </div>
                         </div>
-                        <div class="flex flex-col w-full px-2 py-4 md:py-8">
+                        <div class="flex flex-col w-full px-2 lg:text-right py-8 lg:py-0">
                             <h4 class="m-0 lg:mb-6">Support</h4>
                             <ul class="p-0">
                                 <li class="block"><a class="text-white font-normal text-[10px] tracking-[0.45px]" href="mailto:duhocd@yeowubie.com">email: duhocd@yeowubie.com</a></li>
                             </ul>
                         </div>
-                        <div class="flex flex-col w-full px-2 py-4 md:py-8">
+                        <div class="flex flex-col w-full px-2 lg:text-right py-8 lg:py-0">
                             <h4 class="m-0 lg:mb-6">Company</h4>
                             <ul class="p-0">
                                 <li class="block"><NuxtLink class="text-white py-2 block font-normal text-[10px] tracking-[0.45px]" to="#">About us</NuxtLink></li>
@@ -31,7 +31,7 @@
                                 <li class="block"><NuxtLink class="text-white py-2 block font-normal text-[10px] tracking-[0.45px]" to="#">Service Plicy</NuxtLink></li>
                             </ul>
                         </div>
-                        <div class="flex flex-col w-full px-2 py-4 md:py-8">
+                        <div class="flex flex-col w-full px-2 lg:text-right py-8 lg:py-0">
                             <h4 class="m-0 lg:mb-6">Quick Menu</h4>
                             <ul class="p-0">
                                 <li class="block"><NuxtLink class="text-white py-2 block font-normal text-[10px] tracking-[0.45px]" to="#">FAQ</NuxtLink></li>

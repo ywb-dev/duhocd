@@ -1,6 +1,6 @@
 <template>
     <li class="menu-item block">
-        <NuxtLink :class="{ 'root-category tab': isRoot }" class="text-base font-black text-textPrimary py-2.5 px-5 block" :to="index === 0 ? '/admin' : '/admin/login'">{{ item?.label }}</NuxtLink>
+        <NuxtLink :class="{ 'root-category tab': isRoot }" class="text-base font-black text-textPrimary py-2.5 px-5 block" :to="index === 0 ? '/user/login' : '/user/register'">{{ item?.label }}</NuxtLink>
         <template v-if="item.items" >
             <ul class="mega-menu-content z-10 pb-5 bg-white">
                 <menu-item v-for="subItem in item.items" :key="subItem?.label" :item="subItem"></menu-item>
@@ -46,14 +46,13 @@ export default {
         left: 0;
         background-color: white;
     }
-    .mega-menu-content .menu-item a:hover::before {
-        content: '';
-        position: absolute;
-        height: 8px;
-        width: calc(100% - 20px);
-        bottom: 10px;
-        left: 20px;
-        background: linear-gradient(90deg, rgba(86, 171, 233, 0.45) 0%, rgba(86, 171, 233, 0.25) 100%);
+
+    .headerSticky .root-category.router-link-active.tab::before {
+        background-color: #1B80CA;
+    }
+
+    .headerSticky .router-link-active.root-category {
+        background-color: #1B80CA;
     }
     .menu-item .menu-item > a {
         font-size: 14px;
@@ -106,5 +105,12 @@ export default {
     }
     .mega-menu-content::-webkit-scrollbar {
         display: none;
+    }
+
+    /* Header Sticky */
+    .headerSticky .root-category {
+        border-color: white;
+        color: white;
+        background-color: #176299;
     }
 </style>

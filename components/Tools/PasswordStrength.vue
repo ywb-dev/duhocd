@@ -82,6 +82,7 @@
     height: 6px;
     border-radius: 3px;
     background-color: #E4E4E4;
+    transition: all .3s ease-in;
   }
   </style>
   

@@ -1,16 +1,17 @@
 <template>
     <header :class="{ 'navopen': navopen}" class="block w-full">
-        <div :class="{ headerSticky: isSticky }" class="header fixed w-full z-20">
-            <div class="header__inner flex items-center justify-between w-full container pt-4 pb-2.5 lg:pt-5 lg:pt-8 lg:pb-0">
-                <a href="/">
-                    <IconLogo class="w-12 h-12 lg:w-[84px] lg:h-[84px]"/>
+        <div :class="{ headerSticky: isSticky,  headerScroll: isScroll }" class="header fixed w-full z-20">
+            <div class="header__inner flex items-center justify-between w-full container py-4 lg:pt-5 lg:py-5">
+                <a class="flex" href="/">
+                    <IconLogo class="logo-blue w-12 h-12 lg:w-20 lg:h-20"/>
+                    <IconLogoWhite class="logo-white hidden"/>
                 </a>
                 <div
-                    class="w-full flex items-center justify-between lg:border-t-0 lg:border-l-0 lg:border-r-0 lg:border-b lg:border-solid lg:border-textPrimary">
+                    class="menu__wrap w-full flex items-center justify-between lg:border-t-0 lg:border-l-0 lg:border-r-0 lg:border-b lg:border-solid lg:border-textPrimary">
                     <MegaMenu />
                     <div class="nav-action ml-auto">
                         <NuxtLink to="/user/login" class="hidden lg:flex guess items-center justify-center cursor-pointer">
-                            <span class="text-xs mr-2 font-medium text-textPrimary">Login</span>
+                            <span class="text-login text-xs mr-2 font-medium text-textPrimary">Login</span>
                             <span class="icon">
                                 <svg width="24" height="30" viewBox="0 0 24 30" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -38,8 +39,9 @@
                                 </svg>
                             </span>
                         </NuxtLink>
+                        <!-- đã đăng nhập -->
                         <!-- <NuxtLink to="/user/login" class="hidden lg:flex guess items-center justify-center cursor-pointer">
-                            <span class="text-xs mr-2 font-medium text-textPrimary">MyPage</span>
+                            <span class="text-login text-xs mr-2 font-medium text-textPrimary">MyPage</span>
                             <span class="icon">
                                 <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="15" cy="15" r="14" fill="#E5F3FD" stroke="#1B80CA"/>
@@ -61,8 +63,9 @@
 </template>
 <script setup>
     const navopen = ref(false)
-    const headerHeight = 100; // Set the height of your header
+    const headerHeight = 100; 
     const isSticky = ref(false);
+    const isScroll = ref(false);
     const lastScrollPosition = ref(0);
     const initHeight = ref(true)
 
@@ -75,10 +78,12 @@
 
       if (currentScrollPosition > headerHeight) {
         initHeight.value = false
+        isScroll.value = true;
         isSticky.value = currentScrollPosition < lastScrollPosition.value;
       } else {
         isSticky.value = false;
         initHeight.value = true
+        isScroll.value = false;
       }
 
       lastScrollPosition.value = currentScrollPosition;
@@ -95,13 +100,45 @@
 
 <style scoped>
     .header {
-        /* background-color: white; */
-        backdrop-filter: blur(16px);
-        transition: all .6s;
-    }
-    .headerSticky.headerSticky {
         top: 0;
+        background-color: white;
+        box-shadow: 0 1px 5px #b3b3b3;
+        transition: transform .4s ease-in-out, opacity .4s ease-in-out, background-color .4s ease-in-out;
+    }
+
+    .headerScroll {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+
+    .headerSticky {
         opacity: 1;
+        transform: translateY(0); 
+        box-shadow: 0 1px 5px #b3b3b3;
+    }
+
+    .navopen .header {
+        box-shadow: none;
+    }
+
+    @media (min-width: 1024px) {
+        .header {
+            box-shadow: none;
+        }
+        .headerSticky {
+            background-color: #1B80CA; 
+            box-shadow: 2px 1px 5px #5d5b5b;
+        }
+        .headerSticky .logo-blue {
+            display: none;
+        }
+
+        .headerSticky .logo-white {
+            display: block;
+        }
+    }
+    .headerSticky .text-login {
+        color: white;
     }
     .navopen .header {
         background-color: transparent;
@@ -117,7 +154,6 @@
             cursor: pointer;
             position: relative;
             margin-left: 1.5em;
-            position: relative;
             z-index: 1000;
         }
         .nav-button span,
@@ -172,5 +208,9 @@
             left: 0;
             width: 100%;
         }
+    }
+
+    .headerSticky .menu__wrap {
+        border-color: white;
     }
 </style>

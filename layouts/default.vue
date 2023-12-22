@@ -5,6 +5,7 @@
             <NuxtPage />
         </div>
         <Footer />
+        <CookieConsent />
     </div>
 </template>
 <script setup>

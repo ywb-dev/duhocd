@@ -1,5 +1,5 @@
 <template>
-    <svg width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="80" height="80" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g filter="url(#filter0_d_37_1724)">
             <path d="M0 0H49C65.5685 0 79 13.4315 79 30V79H0V0Z" fill="#1B80CA" />
             <path

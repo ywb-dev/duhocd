@@ -368,3 +368,7 @@ input[type="checkbox"] {
 .field-fe {
   margin-bottom: 26px;
 }
+
+.popup-show {
+  overflow: hidden;
+}

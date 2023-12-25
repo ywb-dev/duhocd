@@ -4,7 +4,7 @@
             <div class="mt-10 py-6 md:pt-20 md:pb-10 flex flex-col md:flex-row justify-between gap-6">
                 <div class="md:pr-12 w-full he-full">
                     <h3
-                        class="font-black text-black -tracking-[3px] text-xl md:text-3xl lg:text-[42px] leading-[48px] m-0 mb-2">
+                        class="font-black text-black tracking-tight md:-tracking-[3px] text-xl md:text-3xl lg:text-[42px] leading-[48px] m-0 mb-2">
                         한국 유학생을 모집 중 이세요?</h3>
                     <p
                         class="text-sm md:text-base lg:text-xl max-w-md text-black tracking-tighter font-medium leading-7 mb-0">

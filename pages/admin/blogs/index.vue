@@ -30,7 +30,6 @@ const blogStore = useBlogStore()
 // Gets all blogs
 const getBlogs = (page) => {
     blogStore.getBlogs(page).then((res) => {
-        console.log('data:', res)
         blogs.value = res.data;
         pagination.value = res
     });
@@ -43,9 +42,9 @@ const confirmDeleteBlog = async(dataBlog) => {
 };
 
 const deleteBlog = () => {
+    deleteProductDialog.value = false;
     blogStore.deleteBlog(blog.value.id).then(()=> {
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Blog đã xóa thành công', life: 3000 });
-        deleteProductDialog.value = false;
     }) 
     .catch(function (error) {
         console.log(error);

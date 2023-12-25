@@ -1,10 +1,6 @@
 <script setup>
     import { ref } from "vue";
-
-    definePageMeta({
-        middleware: 'is-logged-out'
-    })
-
+    
     const darkMode = ref(false)
     const menu = ref();
     const accountMenu = ref();

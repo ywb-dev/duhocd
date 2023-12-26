@@ -34,7 +34,7 @@
                 :modules="[SwiperAutoplay, SwiperNavigation, SwiperPagination]"
                 class="mySwiper"
             >
-                <swiper-slide v-for=" blog in latestBlog">
+                <swiper-slide v-for="blog in latestBlog">
                     <div class="relative">
                         <nuxt-link class="flex select-none relative h-full w-full max-h-[220px] lg:max-h-[220px] max-w-md rounded-2xl overflow-hidden border border-solid border-textPrimary p-2.5" to="/">
 

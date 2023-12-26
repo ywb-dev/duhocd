@@ -19,10 +19,10 @@ const route = useRoute()
 const apiUrl = useRuntimeConfig()
 
 // Render Visible action
-const selectedAction = ref('Visible');
+const selectedAction = ref(0);
 const actions = ref([
-    { name: 'Visible', key: 'A' },
-    { name: 'Hidden', key: 'P' },
+    { name: 'Visible', value: 1, key: 'P' },
+    { name: 'Hidden', value: 0, key: 'D' }
 ]);
 
 // validate form
@@ -81,6 +81,7 @@ const showPostData = (...data) => {
     description.value = blog.value?.description;
     content.value = blog.value?.content;
     banner.value = blog.value?.banner;
+    selectedAction.value = blog.value.status;
     // use id get all field data 
     const categoryObj = categories.value.filter((category) => {
         return category.id === blog.value?.category_id;
@@ -125,9 +126,10 @@ const savePost = handleSubmit(async (values) => {
         'description': description.value,
         'content': content.value,
         'banner': image.value || banner.value,
-        'category_id': categoryId.value.id
+        'category_id': categoryId.value.id,
+        'status': selectedAction.value
     }
-
+    showModal.value = false;
     await blogStore.editBlog(route.params.id, postData).then(() => {
         isDataChanged.value = false;
         alert('Bạn đã cập nhật thành công!')
@@ -190,7 +192,7 @@ const savePost = handleSubmit(async (values) => {
                             <h4 class="mt-0 text-base font-medium">Visibility</h4>
                             <div v-for="action in actions" :key="action.key" class="flex align-items-center mb-4">
                                 <PrimeRadioButton v-model="selectedAction" :inputId="action.key" name="dynamic"
-                                    :value="action.name" />
+                                    :value="action.value" />
                                 <label :for="action.key" class="ml-2 text-sm">{{ action.name }}</label>
                             </div>
                         </div>

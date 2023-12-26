@@ -11,11 +11,8 @@ export const useUserStore = defineStore('user', () => {
     const tokenCookie = useCookie('token')
     const router = useRouter()
 
-    const login = async (username, password) => {
-        const response = await $axios.post('/api/login', {
-            username: username.value,
-            password: password.value,
-        }).then((result) => {
+    const login = async (formdata) => {
+        const response = await $axios.post('/api/login', formdata).then((result) => {
             tokenCookie.value = result?.data?.data?.api_token
             api_token.value = result?.data?.data?.api_token;
             message.value = result?.data?.message;

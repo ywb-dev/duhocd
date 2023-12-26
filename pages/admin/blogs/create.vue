@@ -34,10 +34,10 @@ function validateField(value) {
 // end validate form
 
 const blogStore = useBlogStore()
-const selectedAction = ref('Visible');
+const selectedAction = ref(0);
 const actions = ref([
-    { name: 'Visible', key: 'A' },
-    { name: 'Hidden', key: 'P' },
+    { name: 'Visible', value: 1, key: 'P' },
+    { name: 'Hidden', value: 0, key: 'D' }
 ]);
 
 const getCategories = () => {
@@ -88,6 +88,7 @@ const savePost = handleSubmit(async (values) => {
     formData.append('banner', banner.value || null);
     formData.append('content', content.value || null);
     formData.append('category_id', categoryId.value?.id);
+    formData.append('status', selectedAction?.value);
 
     await blogStore.createBlog(formData).then(() => {
         isDataChanged.value = false;
@@ -153,7 +154,7 @@ const savePost = handleSubmit(async (values) => {
                             <h4 class="mt-0 text-base font-medium">Visibility</h4>
                             <div v-for="action in actions" :key="action.key" class="flex align-items-center mb-4">
                                 <PrimeRadioButton v-model="selectedAction" :inputId="action.key" name="dynamic"
-                                    :value="action.name" />
+                                    :value="action.value" />
                                 <label :for="action.key" class="ml-2 text-sm">{{ action.name }}</label>
                             </div>
                         </div>

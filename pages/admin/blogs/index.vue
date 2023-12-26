@@ -41,22 +41,20 @@ const confirmDeleteBlog = async(dataBlog) => {
     blog.value = dataBlog
 };
 
-const deleteBlog = () => {
+const deleteBlog = async () => {
     deleteProductDialog.value = false;
-    blogStore.deleteBlog(blog.value.id).then(()=> {
+    try {
+        await blogStore.deleteBlog(blog.value.id);
+        getBlogs(1)
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Blog đã xóa thành công', life: 3000 });
-    }) 
-    .catch(function (error) {
-        console.log(error);
+    } catch (error) {
+        console.error(error);
         toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
-    });
+    }
 };
 
 // Redirect to blog detail 
-const editBlog = (editBlog) => {
-   const id = editBlog.id
-   return navigateTo(`/admin/blogs/${id}`)
-};
+const editBlog = (editBlog) => navigateTo(`/admin/blogs/${editBlog.id}`);
 
 // Call func befere mouted
 onBeforeMount(() => {
@@ -155,6 +153,15 @@ initFilters()
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Author: </span>
                                 <span class="ml-32 md:ml-0">{{ slotProps.data.user?.name }}</span>
+                            </div>
+                        </template>
+                    </PrimeColumn>
+                    <PrimeColumn field="status" header="Status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">Status: </span>
+                                <PrimeBadge v-if="slotProps.data.status === 1"></PrimeBadge>
+                                <PrimeBadge v-else severity="warning"></PrimeBadge>
                             </div>
                         </template>
                     </PrimeColumn>

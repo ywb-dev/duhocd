@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vee-validate/nuxt', 
   ],
-   pinia: {
+  pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },
   primevue: {
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
       cssLayerOrder: 'tailwind-base, tailwind-utilities, primevue',
       components: {
          prefix: 'Prime',
-          include: ['Button', 'Accordion', 'Galleria','AccordionTab','RadioButton','Dropdown', 'Chips','InputNumber', 'Textarea','RadioPrimeButton','Password', 'Rating','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload', 'Image', 'InlineMessage', 'MegaMenu'],
+          include: ['Button', 'Accordion','AccordionTab','RadioButton','Dropdown', 'Chips','InputNumber', 'Textarea','RadioPrimeButton','Password','InputSwitch', 'Checkbox','InputText', 'Menu', 'Sidebar', 'Toast', 'DataTable', 'Column', 'ColumnGroup', 'Row', 'Toolbar', 'Dialog', 'FileUpload', 'Image', 'InlineMessage', 'MegaMenu', 'Paginator', 'Badge'],
       }
   },
   css: [
@@ -45,7 +45,7 @@ export default defineNuxtConfig({
       Form: 'VeeForm',
       Field: 'VeeField',
       FieldArray: 'VeeFieldArray',
-      ErrorMessage: 'VeeErrorMessage'
+      ErrorMessage: 'VeeErrorMessage',
     },
   },
   swiper: {

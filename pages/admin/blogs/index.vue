@@ -30,7 +30,7 @@ const blogStore = useBlogStore()
 // Gets all blogs
 const getBlogs = (page) => {
     blogStore.getBlogs(page).then((res) => {
-        blogs.value = res.data;
+        blogs.value = res?.data;
         pagination.value = res
     });
 }

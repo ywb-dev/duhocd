@@ -24,7 +24,6 @@
     }
 
     const onSubmit = handleSubmit(async(values) => {
-        console.log('value', values)
         const logged = userStore.login(values)
         logged.then(() => {
             if (!userStore.isLoggedIn) {

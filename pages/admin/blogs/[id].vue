@@ -30,7 +30,7 @@ const { value: title, errorMessage: titleError } = useField('title', validateFie
 const { value: description, errorMessage: descriptionError } = useField('description', validateField);
 const { value: content, errorMessage: contentError } = useField('content', validateField);
 const { value: banner, errorMessage: bannerError } = useField('banner', validateField)
-const { value: categoryId, errorMessage: categoryIdError } = useField('categoryId');
+const { value: categoryId, errorMessage: categoryIdError } = useField('categoryId', validateField);
 
 function validateField(value) {
     if (!value) {
@@ -123,7 +123,7 @@ const savePost = handleSubmit(async (values) => {
         'description': description.value,
         'content': content.value,
         'banner': banner.value,
-        'category_id': categoryId.value.id,
+        'category_id': categoryId.value?.id,
         'status': selectedAction.value
     }
 
@@ -199,9 +199,11 @@ const savePost = handleSubmit(async (values) => {
                                 </div>
                             </div>
                             <div class="w-full rounded-xl p-8 flex flex-col bg-white mb-6">
-                                <PrimeDropdown v-model="categoryId" showClear :options="categories" optionLabel="name"
+                                <div class="123">
+                                    <PrimeDropdown v-model="categoryId" showClear :options="categories" optionLabel="name"
                                     placeholder="category" class="w-full" :class="{ 'p-invalid' : categoryIdError }" />
-                                    <small class="p-error mt-2">{{ descriptionError }}</small>
+                                    <small class="p-error mt-2">{{ categoryIdError }}</small>
+                                </div>
                                 <div class="w-full h-px bg-[#ced4da] my-2"></div>
                                 <div class="form-group relative py-4">
                                     <label for="my-file" class=" font-medium text-black">Select Feature Image</label>
@@ -215,7 +217,7 @@ const savePost = handleSubmit(async (values) => {
                                                 <small class="block">size: {{ image.size / 1024 }}KB</small>
                                             </div>
                                         </template>
-                                        <img v-if="!preview && banner" :src="apiUrl.public.apiBase + banner"
+                                        <img v-if="!preview && banner" :src="apiUrl?.public?.apiBase + banner"
                                             class="img-fluid w-full h-full object-cover rounded-xl" />
                                     </div>
                                 </div>

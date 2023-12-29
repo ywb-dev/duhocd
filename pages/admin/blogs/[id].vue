@@ -212,7 +212,6 @@ const savePost = handleSubmit(async (values) => {
                                         <template v-if="preview">
                                             <img :src="preview" class="img-fluid w-full h-full object-cover rounded-xl" />
                                             <div>
-                                                <small class="mt-2 block">file name: {{ image.name }}</small>
                                                 <small class="block">size: {{ image.size / 1024 }}KB</small>
                                             </div>
                                         </template>

@@ -23,7 +23,7 @@ const { value: title, errorMessage: titleError } = useField('title', validateFie
 const { value: description, errorMessage: descriptionError } = useField('description', validateField);
 const { value: content, errorMessage: contentError } = useField('content', validateField);
 const { value: banner, errorMessage: bannerError } = useField('banner', validateField)
-const { value: categoryId, errorMessage: categoryIdError } = useField('categoryId');
+const { value: categoryId, errorMessage: categoryIdError } = useField('categoryId', validateField);
 
 function validateField(value) {
     if (!value) {
@@ -93,6 +93,8 @@ const leavePage = () => {
 };
 
 const savePost = handleSubmit(async (values) => {
+    console.log('categoryId', categoryId.value)
+    return false
     const formData = new FormData();
     formData.append('title', title.value);
     formData.append('description', description.value || null);
@@ -178,8 +180,12 @@ const savePost = handleSubmit(async (values) => {
                                 </div>
                             </div>
                             <div class="w-full rounded-xl p-8 flex flex-col bg-white mb-6">
-                                <PrimeDropdown v-model="categoryId" showClear :options="categories" optionLabel="name"
-                                    placeholder="category" class="w-full " />
+                                <div>
+                                    <PrimeDropdown v-model="categoryId" showClear :options="categories" optionLabel="name"
+                                    placeholder="category" class="w-full" :class="{ 'p-invalid': categoryIdError }" />
+                                    <small class="p-error">{{ categoryIdError }}</small>
+                                </div>
+                                    
                                 <div class="w-full h-px bg-[#ced4da] my-2"></div>
                                 <div class="card relative">
                                     <h4 class="mt-0 mb-4 text-base font-medium">Feature Image</h4>

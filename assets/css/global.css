@@ -386,3 +386,12 @@ input[type="file"]::file-selector-button {
 input[type="file"]::file-selector-button:hover {
   opacity: 0.8;
 }
+
+.ck-editor {
+  color: black;
+}
+
+.ck-editor a {
+  color: #1B80CA;
+  text-decoration: underline;
+}

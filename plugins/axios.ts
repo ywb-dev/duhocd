@@ -1,6 +1,7 @@
 import axios from "axios"
 
 export default defineNuxtPlugin(nuxtApp => {
+
     axios.defaults.baseURL = 'https://api.duhocd.com';
     axios.defaults.withCredentials = false;
     // axios.defaults.proxyHeaders = false;

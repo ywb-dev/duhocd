@@ -1,5 +1,4 @@
 <script setup>
-import Editor from 'primevue/editor';
 import { useCategoryStore } from '~~/stores/category';
 import { useToast } from 'primevue/usetoast';
 import { ref, onMounted, watch } from 'vue';
@@ -15,6 +14,7 @@ const categories = ref([])
 const showModal = ref(false);
 const isDataChanged = ref(false);
 const nextAction = ref(null);
+const isLoading = ref(false)
 
 // validate form
 
@@ -44,16 +44,28 @@ const getCategories = () => {
     categoryStore.getCategories().then((data) => {
         categories.value = data;
         if (data.length > 0) {
-            categoryId.value = data[0]; 
+            categoryId.value = data[0];
         }
     });
 }
 onMounted(() => {
     getCategories()
 });
+
+// Handle preview
+const preview = ref(null);
+const image = ref();
 const onUpload = (e) => {
-    const file = e.target.files[0]
-    banner.value = file
+    const input = e.target;
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            preview.value = e.target.result;
+        };
+        image.value = input.files[0];
+        banner.value = input.files[0]; 
+        reader.readAsDataURL(input.files[0]);
+    }
 };
 
 watch([title, description, content, categoryId, banner], () => {
@@ -82,7 +94,6 @@ const leavePage = () => {
 
 const savePost = handleSubmit(async (values) => {
     const formData = new FormData();
-
     formData.append('title', title.value);
     formData.append('description', description.value || null);
     formData.append('banner', banner.value || null);
@@ -90,19 +101,24 @@ const savePost = handleSubmit(async (values) => {
     formData.append('category_id', categoryId.value?.id);
     formData.append('status', selectedAction?.value);
 
-    await blogStore.createBlog(formData).then(() => {
+    isLoading.value = true;
+
+    try {
+        await blogStore.createBlog(formData);
         isDataChanged.value = false;
-        alert('Bạn đã tạo post thành công!')
         leavePage();
-    }).catch(function (errors) {
+    } catch (errors) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
-        console.log(errors)
-    })
+        console.log(errors);
+    } finally {
+        isLoading.value = false;
+    }
+
     return true
 })
 </script>
 <template>
-    <client-only>
+    <ClientOnly>
         <div class="relative w-full">
             <div class="flex flex-wrap">
                 <PrimeToast />
@@ -122,7 +138,8 @@ const savePost = handleSubmit(async (values) => {
                                     <i class="pi pi-align-right" />
                                     <PrimeInputText id="title" :pt="{
                                         root: { class: 'w-full' }
-                                    }" v-model="title" placeholder="Nhập title" :class="{ 'p-invalid' : titleError }" />
+                                    }" v-model="title" placeholder="Nhập title"
+                                        :class="{ 'p-invalid': titleError }" />
                                 </span>
                                 <small class="p-error mt-2">{{ titleError }}</small>
                             </div>
@@ -132,12 +149,13 @@ const savePost = handleSubmit(async (values) => {
                                     <PrimeTextarea id="title" :pt="{
                                         root: { class: 'w-full p-4' },
                                         input: { class: 'w-full p-4' }
-                                    }" v-model="description" placeholder="Nhập mô tả" autoResize :class="{ 'p-invalid' : descriptionError }" rows="5" />
+                                    }" v-model="description" placeholder="Nhập mô tả" autoResize
+                                        :class="{ 'p-invalid': descriptionError }" rows="5" />
                                 </span>
                                 <small class="p-error mt-2">{{ descriptionError }}</small>
                             </div>
                             <div class="blog banner lg:p-6 bg-white rounded-xl">
-                                <h3 class="mb-2 mt-0">Summary</h3>
+                                <h3 class="mb-2 mt-0">Blog content</h3>
                                 <i>Thêm nôi dung của bài post ở đây để hiển thị ra Blog</i>
                                 <Editor class="mt-6" v-model="content" editorStyle="height: 500px" />
                             </div>
@@ -160,15 +178,27 @@ const savePost = handleSubmit(async (values) => {
                                 </div>
                             </div>
                             <div class="w-full rounded-xl p-8 flex flex-col bg-white mb-6">
-                                <PrimeDropdown v-model="categoryId" showClear :options="categories"  optionLabel="name"
+                                <PrimeDropdown v-model="categoryId" showClear :options="categories" optionLabel="name"
                                     placeholder="category" class="w-full " />
                                 <div class="w-full h-px bg-[#ced4da] my-2"></div>
                                 <div class="card relative">
                                     <h4 class="mt-0 mb-4 text-base font-medium">Feature Image</h4>
-                                    <label for="avatar" class="mb-4">Banner</label>
+                                    <label for="avatar" class="mb-4"></label>
                                     <input type="file" accept="image/*" @change="onUpload" :maxFileSize="1000000">
                                 </div>
                                 <small class="p-error mt-2">{{ bannerError }}</small>
+                                <div class="border mt-3">
+                                    <template v-if="preview">
+                                        <div class="w-64 h-64 bg-grey-400 overfow-hidden rounded-xl">
+                                            <img :src="preview" class="img-fluid w-full h-full object-cover rounded-xl" />
+                                        </div>
+                                        <div>
+                                            <small class="block">size: {{ image.size / 1024 }}KB</small>
+                                        </div>
+                                    </template>
+                                    <img v-if="!preview && banner" :src="apiUrl.public.apiBase + banner"
+                                        class="img-fluid w-full h-full object-cover rounded-xl" />
+                                </div>
                                 <div class="mt-4">
                                     <label for="tag" class="text-sm font-medium">Tags:</label>
                                     <PrimeChips id="tag" class="w-full mt-2 " v-model="tags" separator="," :pt="{
@@ -202,6 +232,6 @@ const savePost = handleSubmit(async (values) => {
                 </PrimeDialog>
             </div>
         </div>
-        <CKEditor/>
-    </client-only>
+        <ToolsLoading v-if="isLoading" />
+    </ClientOnly>
 </template>

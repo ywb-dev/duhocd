@@ -1,5 +1,4 @@
 <script setup>
-import Editor from 'primevue/editor';
 import { useCategoryStore } from '~~/stores/category';
 import { ref, onMounted, watch } from 'vue';
 
@@ -10,10 +9,10 @@ definePageMeta({
 const tags = ref([]);
 const categories = ref([]);
 const blog = ref();
-const errorsMessage = ref('')
 const showModal = ref(false);
 const isDataChanged = ref(false);
 const nextAction = ref(null);
+const isLoading = ref(false)
 
 const route = useRoute()
 const apiUrl = useRuntimeConfig()
@@ -47,14 +46,13 @@ const image = ref();
 
 const previewImage = (event) => {
     const input = event.target;
-    if (input.files) {
+    if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
             preview.value = e.target.result;
+            banner.value = e.target.result; 
         };
         image.value = input.files[0];
-        banner.value = input.files[0];
-        // banner.value = input.files[0];
         reader.readAsDataURL(input.files[0]);
     }
 };
@@ -89,7 +87,6 @@ const showPostData = (...data) => {
     categoryId.value = categoryObj[0];
 }
 
-// kiểm tra xem dữ liệu đã được lưu chưa
 watch([title, description, content, categoryId, banner], () => {
     isDataChanged.value = true;
 }, { deep: true });
@@ -125,19 +122,23 @@ const savePost = handleSubmit(async (values) => {
         'title': title.value,
         'description': description.value,
         'content': content.value,
-        'banner': image.value || banner.value,
+        'banner': banner.value,
         'category_id': categoryId.value.id,
         'status': selectedAction.value
     }
+
+    isLoading.value = true;
     showModal.value = false;
-    await blogStore.editBlog(route.params.id, postData).then(() => {
+    try {
+        await blogStore.editBlog(route.params.id, postData);
         isDataChanged.value = false;
-        alert('Bạn đã cập nhật thành công!')
         leavePage();
-    }).catch(function (errors) {
+    } catch (errors) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
         console.log(errors)
-    })
+    } finally {
+        isLoading.value = false;
+    }
 })
 </script>
 <template>  
@@ -255,5 +256,6 @@ const savePost = handleSubmit(async (values) => {
                 </PrimeDialog>
             </div>
     </div>
+    <ToolsLoading v-if="isLoading"/>
     </client-only>
 </template>

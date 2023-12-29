@@ -372,3 +372,17 @@ input[type="checkbox"] {
 .popup-show {
   overflow: hidden;
 }
+
+input[type="file"]::file-selector-button {
+  border: 2px solid #1B80CA;
+  padding: 4px 10px;
+  border-radius: 0.2em;
+  background-color: #1B80CA;
+  color: white;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  opacity: 0.8;
+}

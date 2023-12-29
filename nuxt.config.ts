@@ -1,4 +1,5 @@
 import { resolve } from 'path'
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   postcss: {
@@ -15,6 +16,9 @@ export default defineNuxtConfig({
     'nuxt-swiper',
     '@pinia/nuxt',
     '@vee-validate/nuxt', 
+  ],
+  plugins: [
+    '~/plugins/editor.client.js'
   ],
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],

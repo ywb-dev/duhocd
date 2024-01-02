@@ -13,9 +13,11 @@ const showModal = ref(false);
 const isDataChanged = ref(false);
 const nextAction = ref(null);
 const isLoading = ref(false)
+const popupInfo = ref(false);
 
 const route = useRoute()
 const apiUrl = useRuntimeConfig()
+const { transformValue } = useTransformValue();
 
 // Render Visible action
 const selectedAction = ref(0);
@@ -27,6 +29,9 @@ const actions = ref([
 // validate form
 const { handleSubmit, resetForm } = useForm();
 const { value: title, errorMessage: titleError } = useField('title', validateField);
+const { value: slug, errorMessage: slugError } = useField('slug');
+const { value: meta_title} = useField('meta_title');
+const { value: like_init} = useField('like_init');
 const { value: description, errorMessage: descriptionError } = useField('description', validateField);
 const { value: content, errorMessage: contentError } = useField('content', validateField);
 const { value: banner, errorMessage: bannerError } = useField('banner', validateField)
@@ -76,6 +81,8 @@ const getBlog = async () => {
 // Display Post data
 const showPostData = (...data) => {
     title.value = blog.value?.title;
+    meta_title.value = blog.value?.meta_title;
+    like_init.value = blog.value?.like_init;
     description.value = blog.value?.description;
     content.value = blog.value?.content;
     banner.value = blog.value?.banner;
@@ -124,7 +131,10 @@ const savePost = handleSubmit(async (values) => {
         'content': content.value,
         'banner': banner.value,
         'category_id': categoryId.value?.id,
-        'status': selectedAction.value
+        'status': selectedAction.value,
+        'slug': transformValue(title.value),
+        'meta_title': meta_title?.value,
+        'like_init': like_init?.value
     }
 
     isLoading.value = true;
@@ -165,6 +175,28 @@ const savePost = handleSubmit(async (values) => {
                                 </span>
                                 <small class="p-error mt-2">{{ titleError }}</small>
                             </div>
+                            <div class="field-post flex flex-col mb-4">
+                                <label class="mb-2" for="title">Slug</label>
+                                <span class="p-input-icon-left">
+                                    <input class="h-[40px] w-full text-sm px-4" type="text" disabled :value="transformValue(title)" name="slug" readonly>
+                                </span>
+                                <small class="p-error mt-2">{{ slugError }}</small>
+                            </div>
+                            <div class="flex justify-between mb-4">
+                                <div class="field-post flex flex-col flex-1">
+                                    <label class="mb-2" for="title">Meta Title</label>
+                                    <span class="p-input-icon-left">
+                                        <i class="pi pi-align-right" />
+                                        <PrimeInputText id="title" :pt="{
+                                            root: { class: 'w-full' }
+                                        }" v-model="meta_title" placeholder="Meta title"
+                                        />
+                                    </span>
+                                </div>
+                                <span class="flex items-center justify-center w-6 cursor-pointer h-6 ml-4 mt-auto mb-2 text-xs rounded-full bg-[#f8be2a] text-white border border-solid border-black" @click="popupInfo = true">
+                                    <i class="pi pi-info" />
+                                </span>
+                            </div>
                             <div class="field-post flex flex-col mb-8">
                                 <label class="mb-2" for="title">Descriptions</label>
                                 <span class="p-input-icon-left">
@@ -196,6 +228,16 @@ const savePost = handleSubmit(async (values) => {
                                     <PrimeRadioButton v-model="selectedAction" :inputId="action.key" name="dynamic"
                                         :value="action.value" />
                                     <label :for="action.key" class="ml-2 text-sm">{{ action.name }}</label>
+                                </div>
+                                <div class="w-full h-px bg-[#ced4da] my-2"></div>
+                                <div class="">
+                                    <h4 class="mt-0 text-base font-medium mb-4">Likes</h4>
+                                    <div><i class="pi pi-thumbs-up-fill text-primary"></i><span class="ml-2">123</span></div>
+                                    <div class="flex flex-col mt-2">
+                                        <label for="likeInit">Like init</label>
+                                        <PrimeInputNumber v-model="like_init" inputId="likeInit" :useGrouping="false" />
+                                        <small>eg: số like của bài post = like init + user liked</small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="w-full rounded-xl p-8 flex flex-col bg-white mb-6">
@@ -254,6 +296,19 @@ const savePost = handleSubmit(async (values) => {
                                 label: { class: 'font-semibold' }
                             }" />
                     </template>
+                </PrimeDialog>
+                <PrimeDialog class="text-black" v-model:visible="popupInfo" maximizable modal header="Header" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+                    <p class="m-0">
+                        # Meta Title, còn được gọi là "tiêu đề trang", là một yếu tố quan trọng trong SEO (Tối ưu hóa Công cụ Tìm kiếm) và UX (Trải nghiệm Người dùng). Dưới đây là một số điểm cần lưu ý khi thiết lập Meta Title:
+                    </p>
+                    <ol>
+                        <li class="text-sm mb-2">Độ Dài Tối Ưu: Độ dài khuyến nghị cho Meta Title là khoảng 50-60 ký tự. Điều này đảm bảo rằng tiêu đề không bị cắt ngắn trên các trang kết quả của công cụ tìm kiếm (SERPs).</li>
+                        <li class="text-sm mb-2">Mô Tả Chính Xác Nội Dung: Meta Title cần phản ánh một cách chính xác và rõ ràng nội dung của trang. Điều này giúp cải thiện cơ hội của bạn trong việc thu hút lượt click từ người dùng đang tìm kiếm thông tin liên quan.</li>
+                        <li class="text-sm mb-2">Sử Dụng Từ Khóa: Nên bao gồm các từ khóa chính mà trang web của bạn muốn nhắm đến. Điều này giúp cải thiện vị trí của trang trong kết quả tìm kiếm liên quan.</li>
+                        <li class="text-sm mb-2">Tránh Trùng Lặp và Lấp Đầy Từ Khóa: Mỗi trang nên có Meta Title riêng biệt và tránh lặp lại cùng một tiêu đề trên nhiều trang. Đồng thời, tránh "lấp đầy từ khóa" (keyword stuffing) vì điều này có thể ảnh hưởng tiêu cực đến xếp hạng SEO.</li>
+                        <li class="text-sm mb-2">Thu Hút và Hấp Dẫn: Ngoài việc tối ưu cho công cụ tìm kiếm, Meta Title cũng cần hấp dẫn và thu hút người dùng. Một tiêu đề hấp dẫn sẽ khuyến khích họ nhấp vào link của bạn.</li>
+                        <li class="text-sm mb-2">Thích Nghi với Nội Dung Động: Trong trường hợp trang web của bạn có nội dung động hoặc tùy chỉnh, hãy cân nhắc sử dụng script để tự động tạo Meta Title phù hợp với nội dung cụ thể của mỗi trang.</li>
+                    </ol>
                 </PrimeDialog>
             </div>
     </div>

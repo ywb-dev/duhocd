@@ -18,7 +18,7 @@
     };
     
     onBeforeUnmount(() => {
-        bodyOverflow.value = "auto"; // Đảm bảo rằng body sẽ được cuộn lại sau khi đóng popup
+        bodyOverflow.value = "auto"; 
     });
   
   </script>

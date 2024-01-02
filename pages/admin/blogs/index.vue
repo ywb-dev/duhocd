@@ -116,7 +116,7 @@ initFilters()
                     </template>
 
                     <PrimeColumn selectionMode="multiple" headerStyle="width: 3rem"></PrimeColumn>
-                    <PrimeColumn field="id" header="Stt" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="id" header="Number" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Stt: </span>

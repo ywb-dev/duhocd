@@ -19,7 +19,9 @@ const dt = ref(null);
 const filters = ref({});
 let stt = 1
 const submitted = ref(false);
+
 const categoryStore = useCategoryStore()
+const { transformValue } = useTransformValue();
 
 const getCategories = () => {
     categoryStore.getCategories().then((data) => {
@@ -45,29 +47,32 @@ const hideDialog = () => {
 };
 
 const saveProduct = async () => {
-    submitted.value = true; 
+    submitted.value = true;
+
     const formData = new FormData();
+    formData.append('name', product.value?.name);
+    formData.append('slug',  transformValue(product.value?.name));
+    formData.append('meta_title', product.value?.meta_title);
+    formData.append('description', product.value?.description);
 
-    formData.append('name', product.value.name || null);
-    formData.append('description', product.value.description || null );
-
+    product.value.slug = transformValue(product.value?.name);
+    
     if (product.value.name && product.value.name.trim()) {
         if (product.value.id) {
             await categoryStore.editCategory(product.value.id, product.value).then((data) => {
-                console.log('data:', data)
-                toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });  
+                toast.add({ severity: 'success', summary: 'Successful', detail: 'User Edited', life: 3000 });
                 getCategories()
-            }).catch(function(errors) {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
+            }).catch(function (errors) {
+                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
                 console.log(errors)
             })
-        } else {        
+        } else {
             await categoryStore.createCategory(formData).then(() => {
-                toast.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });  
+                toast.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
                 getCategories()
-            }).catch(function(errors) {
+            }).catch(function (errors) {
                 console.log(errors)
-                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });  
+                toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
             })
         }
         productDialog.value = false;
@@ -87,13 +92,13 @@ const confirmDeleteProduct = (editProduct) => {
 
 const deleteProduct = () => {
     categories.value = categories.value.filter((val) => val.id !== product.value.id);
-    categoryStore.deleteCategory(product.value.id).then(()=> {
+    categoryStore.deleteCategory(product.value.id).then(() => {
         toast.add({ severity: 'success', summary: 'Successful', detail: 'User đã xóa thành công', life: 3000 });
-    }) 
-    .catch(function (error) {
-        console.log(error);
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
-    });
+    })
+        .catch(function (error) {
+            console.log(error);
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
+        });
     deleteProductDialog.value = false;
     product.value = {};
 };
@@ -107,14 +112,14 @@ const confirmDeleteSelected = () => {
 };
 const deleteSelectedProducts = () => {
     categories.value = categories.value.filter((val) => {
-       return !selectedProducts.value.includes(val)
+        return !selectedProducts.value.includes(val)
     });
 
     const userIds = selectedProducts.value.map(user => user.id);
-  
-    categoryStore.deleteSelectCategory(userIds).then(()=> {
+
+    categoryStore.deleteSelectCategory(userIds).then(() => {
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Category đã xóa thành công', life: 3000 });
-    }).catch(function(error) {
+    }).catch(function (error) {
         console.log(error)
         toast.add({ severity: 'error', summary: 'Error', detail: 'Xảy ra lỗi', life: 3000 });
     })
@@ -138,36 +143,30 @@ initFilters()
                 <PrimeToolbar class="mb-4 dark:bg-boxDarkMode flex-wrap">
                     <template v-slot:start>
                         <div class="my-2">
-                            <PrimeButton severity="info" label="New" icon="pi pi-plus" raised  class="p-PrimeButton-success mr-2 p-button-icon" @click="openNew" 
-                            :pt="{ 
-                                root: { class: 'bg-primary' } 
-                            }"/>
-                            <PrimeButton severity="danger" label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+                            <PrimeButton severity="info" label="New" icon="pi pi-plus" raised
+                                class="p-PrimeButton-success mr-2 p-button-icon" @click="openNew" :pt="{
+                                    root: { class: 'bg-primary' }
+                                }" />
+                            <PrimeButton severity="danger" label="Delete" icon="pi pi-trash" class="p-PrimeButton-danger"
+                                @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
                     <template v-slot:end>
                         <!-- <PrimeFileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block" /> -->
-                        <PrimeButton severity="info" label="Export" icon="pi pi-upload" class="p-PrimeButton-help" @click="exportCSV($event)" 
-                        :pt="{ 
-                            root: { class: 'bg-primary' } 
-                        }"/>
+                        <PrimeButton severity="info" label="Export" icon="pi pi-upload" class="p-PrimeButton-help"
+                            @click="exportCSV($event)" :pt="{
+                                root: { class: 'bg-primary' }
+                            }" />
                     </template>
                 </PrimeToolbar>
 
-                <PrimeDataTable
-                    ref="dt"
-                    :value="categories"
-                    v-model:selection="selectedProducts"
-                    dataKey="id"
-                    :paginator="true"
-                    :rows="10"
-                    :filters="filters"
+                <PrimeDataTable ref="dt" :value="categories" v-model:selection="selectedProducts" dataKey="id"
+                    :paginator="true" :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPagePrimeDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    responsiveLayout="scroll"
-                >
+                    responsiveLayout="scroll">
                     <template #header>
                         <div class="flex flex-col md:flex-row md:justify-between md:items-center">
                             <h5 class="m-0 text-xl mb-1.5">Manage Categories</h5>
@@ -179,10 +178,10 @@ initFilters()
                     </template>
 
                     <PrimeColumn selectionMode="multiple" headerStyle="width: 3rem"></PrimeColumn>
-                    <PrimeColumn field="id" header="Stt" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="id" header="Number" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
-                                <span class="md:hidden font-bold absolute">Stt: </span>
+                                <span class="md:hidden font-bold absolute">Number: </span>
                                 <span class="ml-32 md:ml-0">{{ stt++ }}</span>
                             </div>
                         </template>
@@ -195,7 +194,8 @@ initFilters()
                             </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="description" header="Description" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="description" header="Description" :sortable="true"
+                        headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Description: </span>
@@ -203,7 +203,17 @@ initFilters()
                             </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="created" header="Created at" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="meta_title" header="Meta Title" :sortable="true"
+                        headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <div class="flex items-center">
+                                <span class="md:hidden font-bold absolute">Meta Title: </span>
+                                <span class="ml-32 md:ml-0">{{ slotProps.data.meta_title }}</span>
+                            </div>
+                        </template>
+                    </PrimeColumn>
+                    <PrimeColumn field="created" header="Created at" :sortable="true"
+                        headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">created: </span>
@@ -211,7 +221,8 @@ initFilters()
                             </div>
                         </template>
                     </PrimeColumn>
-                    <PrimeColumn field="updated" header="Updated at" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <PrimeColumn field="updated" header="Updated at" :sortable="true"
+                        headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <div class="flex items-center">
                                 <span class="md:hidden font-bold absolute">Updated at: </span>
@@ -221,76 +232,92 @@ initFilters()
                     </PrimeColumn>
                     <PrimeColumn headerStyle="min-width:10rem;" header="Actions">
                         <template #body="slotProps">
-                            <PrimeButton severity="info" icon="pi pi-pencil" class="p-PrimeButton-rounded p-PrimeButton-success mr-2" @click="editProduct(slotProps.data)" 
-                            :pt="{ 
-                                root: { class: 'bg-primary' } 
-                            }"/>
-                            <PrimeButton severity="danger" icon="pi pi-trash" class="p-PrimeButton-rounded p-PrimeButton-warning mt-2" @click="confirmDeleteProduct(slotProps.data)" />
+                            <PrimeButton severity="info" icon="pi pi-pencil"
+                                class="p-PrimeButton-rounded p-PrimeButton-success mr-2"
+                                @click="editProduct(slotProps.data)" :pt="{
+                                    root: { class: 'bg-primary' }
+                                }" />
+                            <PrimeButton severity="danger" icon="pi pi-trash"
+                                class="p-PrimeButton-rounded p-PrimeButton-warning mt-2"
+                                @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </PrimeColumn>
                 </PrimeDataTable>
 
-                <PrimeDialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Category Details" :modal="true" class="p-fluid">
+                <PrimeDialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Category Details"
+                    :modal="true" class="p-fluid">
                     <div class="field">
                         <label class="block mb-0.5 text-sm" for="name">Name</label>
-                        <PrimeInputText id="name" v-model.trim="product.name" required="true" autofocus :class="{ 'p-invalid': submitted && !product.name }" />
+                        <PrimeInputText id="name" v-model.trim="product.name" required="true" autofocus
+                            :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
                     <div class="field">
+                        <label class="mb-2" for="title">Slug</label>
+                        <span class="p-input-icon-left">
+                            <input class="h-[40px] w-full text-sm px-4" type="text" disabled :value="transformValue(product?.name)"
+                                name="slug" readonly>
+                        </span>
+                    </div>
+                    <div class="field">
+                        <label class="block mb-0.5 text-sm" for="meta_title">Meta Title</label>
+                        <PrimeInputText id="meta_title" v-model.trim="product.meta_title" required="true" autofocus
+                            :class="{ 'p-invalid': submitted && !product.meta_title }" />
+                        <small class="p-invalid" v-if="submitted && !product.meta_title">Name is required.</small>
+                    </div>
+                    <div class="field">
                         <label class="block mb-0.5 text-sm" for="description">Description</label>
-                        <PrimeInputText id="description" v-model.trim="product.description" required="false" autofocus :class="{ 'p-invalid': submitted && !product.description }" />
+                        <PrimeInputText id="description" v-model.trim="product.description" required="false" autofocus
+                            :class="{ 'p-invalid': submitted && !product.description }" />
                         <small class="p-invalid" v-if="submitted && !product.description">Description is required.</small>
                     </div>
                     <template #footer>
-                        <PrimeButton label="Cancel" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="hideDialog"
-                        :pt="{ 
-                            label: { class: 'font-semibold' } 
-                        }" />
-                        <PrimeButton label="Save" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="saveProduct" 
-                        :pt="{ 
-                            label: { class: 'font-semibold' } 
-                        }"/>
+                        <PrimeButton label="Cancel" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text"
+                            @click="hideDialog" :pt="{
+                                label: { class: 'font-semibold' }
+                            }" />
+                        <PrimeButton label="Save" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text"
+                            @click="saveProduct" :pt="{
+                                label: { class: 'font-semibold' }
+                            }" />
                     </template>
                 </PrimeDialog>
 
-                <PrimeDialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+                <PrimeDialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm"
+                    :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product"
-                            >Bạn có chắc là muốn xóa <b>{{ product.name }}</b
-                            > không?</span
-                        >
+                        <span v-if="product">Bạn có chắc là muốn xóa <b>{{ product.name }}</b> không?</span>
                     </div>
                     <template #footer>
-                        <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="deleteProductDialog = false" 
-                        :pt="{ 
-                            label: { class: 'font-semibold' } 
-                        }"/>
-                        <PrimeButton label="Yes" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="deleteProduct" 
-                        :pt="{ 
-                            label: { class: 'font-semibold' } 
-                        }"
-                        />
+                        <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text"
+                            @click="deleteProductDialog = false" :pt="{
+                                label: { class: 'font-semibold' }
+                            }" />
+                        <PrimeButton label="Yes" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text"
+                            @click="deleteProduct" :pt="{
+                                label: { class: 'font-semibold' }
+                            }" />
                     </template>
                 </PrimeDialog>
 
-                <PrimeDialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+                <PrimeDialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm"
+                    :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                         <span v-if="product">Bạn có muốn xóa những categories đã chọn không?</span>
                     </div>
                     <template #footer>
-                        <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text" @click="deleteProductsDialog = false" 
-                        :pt="{ 
-                            label: { class: 'font-bold' } 
-                        }"/>
-                        <PrimeButton label="Yes" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text" @click="deleteSelectedProducts" 
-                        :pt="{ 
-                            label: { class: 'font-bold' } 
-                        }"/>
+                        <PrimeButton label="No" icon="pi pi-times" severity="info" outlined class="p-PrimeButton-text"
+                            @click="deleteProductsDialog = false" :pt="{
+                                label: { class: 'font-bold' }
+                            }" />
+                        <PrimeButton label="Yes" icon="pi pi-check" severity="info" outlined class="p-PrimeButton-text"
+                            @click="deleteSelectedProducts" :pt="{
+                                label: { class: 'font-bold' }
+                            }" />
                     </template>
                 </PrimeDialog>
             </div>
         </div>
-    </div>
-</template>
+</div></template>

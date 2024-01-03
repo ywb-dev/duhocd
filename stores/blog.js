@@ -10,6 +10,7 @@ export const useBlogStore = defineStore('blog', () => {
         console.error('API Error:', error);
     }
 
+    // Admin Api
     const getBlog = async (id) => {
         try {
             const response = await $axios.get(`/api/post/${id}`);
@@ -18,7 +19,6 @@ export const useBlogStore = defineStore('blog', () => {
             handleApiError(error);
         }
     };
-
 
     const getBlogs = async (page) => {
         try {
@@ -66,6 +66,15 @@ export const useBlogStore = defineStore('blog', () => {
         }
     }
 
+    // Public Api
+    const getBlogUi = async (id) => {
+        try {
+            const response = await $axios.get(`/api/public/post/${id}`);
+            return processResponse(response?.data);
+        } catch (error) {
+            handleApiError(error);
+        }
+    };
 
-    return { getBlogs, createBlog, getBlog, editBlog, deleteBlog, getLatestBlogs }
+    return { getBlogs, createBlog, getBlog, editBlog, deleteBlog, getLatestBlogs, getBlogUi }
 })

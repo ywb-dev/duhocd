@@ -1,7 +1,7 @@
 
 <template>
     <div class="relative">
-        <div class="slideout fixed top-0 right-0 w-full max-w-[320px] bg-[#DBF0FF] min-h-screen z-10">
+        <div class="slideout fixed top-0 right-0 w-full max-w-[320px] bg-[#DBF0FF] min-h-screen z-20">
             <div class="content pt-32">
                 <div class="category-wrapper">
                     <PrimeAccordion :activeIndex="0">

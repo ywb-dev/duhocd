@@ -1,6 +1,6 @@
 <template>
     <header :class="{ 'navopen': navopen}" class="block w-full">
-        <div :class="{ headerSticky: isSticky,  headerScroll: isScroll }" class="header fixed w-full z-20">
+        <div :class="{ headerSticky: isSticky,  headerScroll: isScroll }" class="header fixed w-full z-50">
             <div class="header__inner flex items-center justify-between w-full container py-4 lg:pt-5 lg:py-5">
                 <a class="flex" href="/">
                     <IconLogo class="logo-blue w-12 h-12 lg:w-20 lg:h-20"/>

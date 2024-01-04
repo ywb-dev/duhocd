@@ -299,6 +299,15 @@ p {
 }
 
 /* Text ellipsis */
+.text-three-line {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: initial;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
 .text-two-line {
   text-overflow: ellipsis;
   overflow: hidden;

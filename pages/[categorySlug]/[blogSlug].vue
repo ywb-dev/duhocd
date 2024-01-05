@@ -3,14 +3,31 @@
       <PagesPageTitle :title="'PostID:' + (blogData.id || 'N/A')" showIconImage="true"/>
       <HeroBanner :blog="blogData" />
       <div class="relative container">
-         <div class="layout-sidebar mt-8 flex flex-col md:flex-row">
-            <div id="blog-content" class="mb-6 w-full flex-1 rounded-2xl bg-[#F7F7F7] p-6 md:p-9">
-                <div class="overflow-x-hidden" v-html="blogData?.content || 'content'">
+         <div class="layout-sidebar mt-5 py-8 flex flex-col md:flex-row">
+           <div class="max-w-[670px] w-full">
+               <div class="blog-desc w-full p-8 mb-5 bg-[#DAEFFF] rounded-2xl flex items-center">
+                  <p class="text-sm text-black leading-[21px] -tracking-[0.3px] mb-0">{{ blogData?.description }}</p>
+               </div>
+               <div id="blog-content" class="w-full flex-1 rounded-2xl bg-[#F7F7F7] p-6 md:p-9">
+                  <div class="overflow-x-hidden w-full" v-html="blogData?.content || 'content'">
 
-                </div>
-            </div>   
-            <div class="sidebar w-full  md:ml-6 md:max-w-[260px]">
-               <div class="social__sharing border border-solid border-textPrimary rounded-2xl py-6 px-9 flex gap-5">
+                  </div>
+                  <div class="comment w-full">
+                     <div class="list-comment mt-12 mb-10">
+                        <h4 class="text-black mt-0 font-medium text-[15px]">0 comments</h4>
+                     </div>
+                     <div class="w-full h-px bg-[#DEDEDE]"></div>
+                     <div class="box-comment w-full flex pt-5">
+                        <div class="avatar w-14 h-14 mr-2.5 rounded-full bg-grey-500 relative"></div>
+                        <div class="flex-1">
+                           <textarea class="w-full h-14 rounded border-textPrimary px-2.5 py-2 text-[13px] text-black" name="" id="" cols="30" rows="10" placeholder="Add a comment"></textarea>
+                        </div>
+                     </div>
+                  </div>
+               </div> 
+           </div>  
+            <div class="sidebar w-full h-fit md:ml-6 md:max-w-[260px] md:sticky top-0">
+               <div class="social__sharing flex justify-center items-center border border-solid border-textPrimary rounded-2xl py-6 px-9 flex gap-5">
                   <nuxt-link class="flex items-center justify-center hover:opacity-80" to="/">
                      <IconFacebook/>
                   </nuxt-link>
@@ -27,67 +44,66 @@
                      <IconPrint  @click="printContent"/>
                   </span>
                </div>  
-               <div class="trends mt-5 w-full p-9 rounded-2xl bg-textPrimary text-white">
-                  <h4 class="text-[21px] leading-6 font-bold text-white m-0">Do you like this post?</h4>
-                  <p class="m-0 text-[13px] font-normal mt-1.5">Share this in your socials</p>
-                  <div class="w-full h-px bg-[#63B9F8] my-6"></div>
-                  <h4 class="text-[21px] leading-6 font-bold text-white m-0">Trends</h4>
-                  <p class="m-0 text-[13px] font-normal mt-1.5">Do not miss the trends nows</p>
-                  <div class="py-6">
-                     <NuxtLink to="/" class="flex mb-5 transition-all text-white">
-                        <div class="flex rounded-xl overflow-hidden w-20 h-20 bg-grey-400 min-w-[80px]">
-                           <img width="80" height="80" class="w-full h-full object-cover" src="/banner_demo.png" alt="" loading="lazy">
-                        </div>
-                        <span class="ml-3 h-[76px] text-white text-three-line block leading-2">석톤팠운과 싸나의 석톤팠운과 싸나의 석톤팠운과 싸나의, 어흥지존는 맵열끼까지 셔저다</span>
-                     </NuxtLink>
-                     <NuxtLink to="/" class="flex mb-5 transition-all text-white">
-                        <div class="flex rounded-xl overflow-hidden w-20 h-20 bg-grey-400 min-w-[80px]">
-                           <img width="80" height="80" class="w-full h-full object-cover" src="/banner_demo.png" alt="" loading="lazy">
-                        </div>
-                        <span class="ml-3 h-[76px] text-white text-three-line block leading-2">석톤팠운과 싸나의 석톤팠운과 싸나의 석톤팠운과 싸나의, 어흥지존는 맵열끼까지 셔저다</span>
-                     </NuxtLink>
-                     <NuxtLink to="/" class="flex mb-5 transition-all text-white">
-                        <div class="flex rounded-xl overflow-hidden w-20 h-20 bg-grey-400 min-w-[80px]">
-                           <img width="80" height="80" class="w-full h-full object-cover" src="/banner_demo.png" alt="" loading="lazy">
-                        </div>
-                        <span class="ml-3 h-[76px] text-white text-three-line block leading-2">석톤팠운과 싸나의 석톤팠운과 싸나의 석톤팠운과 싸나의, 어흥지존는 맵열끼까지 셔저다</span>
-                     </NuxtLink>
-                     <NuxtLink to="/" class="flex mb-5 transition-all text-white">
-                        <div class="flex rounded-xl overflow-hidden w-20 h-20 bg-grey-400 min-w-[80px]">
-                           <img width="80" height="80" class="w-full h-full object-cover" src="/banner_demo.png" alt="" loading="lazy">
-                        </div>
-                        <span class="ml-3 h-[76px] text-white text-three-line block leading-2">석톤팠운과 싸나의 석톤팠운과 싸나의 석톤팠운과 싸나의, 어흥지존는 맵열끼까지 셔저다</span>
-                     </NuxtLink>
-                     <NuxtLink to="/" class="flex mb-5 transition-all text-white">
-                        <div class="flex rounded-xl overflow-hidden w-20 h-20 bg-grey-400 min-w-[80px]">
-                           <img width="80" height="80" class="w-full h-full object-cover" src="/banner_demo.png" alt="" loading="lazy">
-                        </div>
-                        <span class="ml-3 h-[76px] text-white text-three-line block leading-2">석톤팠운과 싸나의 석톤팠운과 싸나의 석톤팠운과 싸나의, 어흥지존는 맵열끼까지 셔저다</span>
-                     </NuxtLink>
-                  </div>
-               </div>
+               <BlogTrends/>
+               <BlogRelate/>
             </div>
       </div>
       </div>
    </div>
 </template>
-<style scoped>
+<style>
  #blog-content {
    color: black;
  }
- #blog-content .image {
-   display: flex;
+
+
+ #blog-content th,
+ #blog-content td,
+ #blog-content table {
+   border: 1px solid #1B80CA;
+   border-collapse: collapse;
  }
 
- #blog-content img {
-   width: 100%;
-   object-fit: contain;
+ #blog-content th,
+ #blog-content td {
+   padding: 7px 15px;
+   text-align: center;
  }
+ 
+ #blog-content .image {
+   display: inline-block;
+   margin: 0 auto 20px;
+ }
+
+ #blog-content .image img {
+   width: 100%;
+ }
+
+ @media (max-width: 767px)  {
+
+   #blog-content img {
+      object-position: center;
+   }
+   
+   #blog-content .image img {
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      object-fit: contain;
+   }
+
+   #blog-content .table {
+      margin: 0;
+   }
+ }
+
 </style>
 <script setup>
 const route = useRoute();
 const blogStore = useBlogStore();
-const blogData = ref({})
+const blogData = ref({});
+const isLoaded = ref(false);
 
 // CEO
 useSeoMeta({
@@ -115,9 +131,9 @@ const printContent = () => {
 const getBlog = async () => {
     try {
         const response = await blogStore.getBlogUi(blogSlug);
+        isLoaded.value = true
         if (response) {
             blogData.value = response;
-            console.log('data:', response);
         } else {
             console.error('No data returned from API');
         }

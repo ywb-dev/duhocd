@@ -14,6 +14,8 @@ const isDataChanged = ref(false);
 const nextAction = ref(null);
 const isLoading = ref(false)
 const popupInfo = ref(false);
+const categorySlug = ref('')
+const blogSlug = ref('')
 
 const route = useRoute()
 const apiUrl = useRuntimeConfig()
@@ -86,7 +88,8 @@ const showPostData = (...data) => {
     description.value = blog.value?.description;
     content.value = blog.value?.content;
     banner.value = blog.value?.banner;
-    selectedAction.value = blog.value.status;
+    selectedAction.value = blog.value?.status;
+    blogSlug.value = blog.value?.slug;
     // use id get all field data 
     const categoryObj = categories.value.filter((category) => {
         return category.id === blog.value?.category_id;
@@ -162,8 +165,9 @@ const savePost = handleSubmit(async (values) => {
                     </div>
                     <div class="content__wrap flex flex-col lg:flex-row">
                         <div class="flex-1 pb-20">
-                            <div class="flex flex-col">
-                                <h2 class="mt-10 mb-6">Add new posts</h2>
+                            <div class="flex flex justify-between items-center mt-10 mb-6">
+                                <h2 class="m-0">Change the Post</h2>
+                                <a class="flex items-center text-textPrimary -tracking-[0.4px] underline" :href="`/${categoryId?.slug}/${blogSlug}`" target="_blank">Go to blog detail <i class="ml-2 pi pi-angle-double-right"></i></a>
                             </div>
                             <div class="field-post flex flex-col mb-8">
                                 <label class="mb-2" for="title">Post Title</label>

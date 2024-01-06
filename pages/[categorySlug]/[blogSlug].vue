@@ -9,7 +9,7 @@
                   <p class="text-sm text-black leading-[21px] -tracking-[0.3px] mb-0">{{ blogData?.description }}</p>
                </div>
                <div id="blog-content" class="w-full flex-1 rounded-2xl bg-[#F7F7F7] p-6 md:p-9">
-                  <div class="overflow-x-hidden w-full" v-html="blogData?.content || 'content'">
+                  <div  ref="textToCopy" class="overflow-x-hidden w-full" v-html="blogData?.content || 'content'">
 
                   </div>
                   <div class="comment w-full">
@@ -37,7 +37,7 @@
                   <nuxt-link class="flex items-center justify-center hover:opacity-80" to="/">
                      <IconSharing/>
                   </nuxt-link>
-                  <span class="cursor-pointer flex items-center justify-center hover:opacity-80">
+                  <span @click="copyText" class="cursor-pointer flex items-center justify-center hover:opacity-80">
                       <IconCoppy />
                   </span>
                   <span class="cursor-pointer flex items-center justify-center hover:opacity-80">
@@ -54,6 +54,7 @@
 <style>
  #blog-content {
    color: black;
+   min-height: 600px;
  }
 
 
@@ -77,7 +78,13 @@
 
  #blog-content .image img {
    width: 100%;
+   object-fit: cover;
  }
+
+ #blog-content .table {
+   margin-left: 0;
+   margin-right: 0;
+}
 
  @media (max-width: 767px)  {
 
@@ -92,10 +99,6 @@
       top: 0;
       object-fit: contain;
    }
-
-   #blog-content .table {
-      margin: 0;
-   }
  }
 
 </style>
@@ -103,7 +106,7 @@
 const route = useRoute();
 const blogStore = useBlogStore();
 const blogData = ref({});
-const isLoaded = ref(false);
+const textToCopy = ref('')
 
 // CEO
 useSeoMeta({
@@ -127,11 +130,26 @@ const printContent = () => {
   document.body.innerHTML = originalContents;
 };
 
+// Handle coppy content
+const copyText = () => {
+   if (textToCopy.value) {
+      const text = textToCopy.value.innerText;
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      alert('Nội dung đã được sao chép!');
+   }
+}
+
 // Render blog
 const getBlog = async () => {
     try {
         const response = await blogStore.getBlogUi(blogSlug);
-        isLoaded.value = true
+   
         if (response) {
             blogData.value = response;
         } else {

@@ -47,7 +47,6 @@ export const useBlogStore = defineStore('blog', () => {
         }
     }
 
-
     const deleteBlog = async (id) => {
         try {
             const response = await $axios.delete(`/api/post/${id}`);

@@ -23,6 +23,11 @@
                                 <div class="box-text flex w-full rounded-xl">
                                     <img width="359" height="125" class="object-cover w-full rounded-2xl overflow-hidden" :src="apiUrl.public.apiBase + blog?.banner" loading="lazy" alt="slider">
                                 </div>
+                                <div class="flex flex-col justify-end text-left absolute z-50 w-full h-full top-0 left-0 p-4">
+                                    <div class="">
+                                        <h3 class="text-two-line text-sm leading-6 text-white font-black m-0 mb-1">{{ blog?.title }}</h3>
+                                    </div>
+                                </div>
                             </nuxt-link>
                         </div>
                     </swiper-slide>

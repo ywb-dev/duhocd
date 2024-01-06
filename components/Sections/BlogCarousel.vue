@@ -120,7 +120,6 @@
     const getLatestBlogs = async () => {
         try {
             const res = await blogStore.getLatestBlogs(8);
-            console.log('resss:', res)
             latestBlog.value = res;
         } catch (error) {
             console.error('Failed to fetch latest blogs:', error);

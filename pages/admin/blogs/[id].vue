@@ -1,6 +1,7 @@
 <script setup>
 import { useCategoryStore } from '~~/stores/category';
 import { ref, onMounted, watch } from 'vue';
+import { useToast } from 'primevue/usetoast';
 
 definePageMeta({
     layout: 'admin'
@@ -16,6 +17,8 @@ const isLoading = ref(false)
 const popupInfo = ref(false);
 const categorySlug = ref('')
 const blogSlug = ref('')
+const toast = useToast();
+
 
 const route = useRoute()
 const apiUrl = useRuntimeConfig()

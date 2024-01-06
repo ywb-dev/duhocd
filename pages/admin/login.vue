@@ -12,12 +12,12 @@
     const userStore = useUserStore()
     const toast = useToast();
 
-    const { value: username, errorMessage: usernameError } = useField('username', validateField);
+    const { value: email, errorMessage: emailError } = useField('email', validateField);
     const { value: password, errorMessage: passwordError } = useField('password', validateField);
 
     function validateField(value) {
         if (!value) {
-            return 'Password is required.';
+            return 'This Field is required.';
         }
 
         return true;
@@ -52,9 +52,9 @@
                 <div class="card">
                     <form @submit="onSubmit" class="flex flex-col gap-2">
                         <div class="field flex flex-col">
-                            <label class="text-sm" for="username">Username</label>
-                            <PrimeInputText name="username" id="username" class="border border-border-field w-full rounded px-4 py-2.5 hover:border-primary text-sm text-black" v-model="username" type="text" aria-describedby="text-error" :class="{ 'p-invalid rounded': usernameError }"/>
-                            <small class="p-error" id="text-error">{{ usernameError || '&nbsp;' }}</small>
+                            <label class="text-sm" for="email">Email</label>
+                            <PrimeInputText name="email" id="email" class="border border-border-field w-full rounded px-4 py-2.5 hover:border-primary text-sm text-black" v-model="email" type="text" aria-describedby="text-error" :class="{ 'p-invalid rounded': emailError }"/>
+                            <small class="p-error" id="text-error">{{ emailError || '&nbsp;' }}</small>
                         </div>
                         <div class="field flex flex-col">
                             <label class="text-sm" for="pw">Password</label>

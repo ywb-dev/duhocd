@@ -10,7 +10,7 @@
                     class="menu__wrap w-full flex items-center justify-between lg:border-t-0 lg:border-l-0 lg:border-r-0 lg:border-b lg:border-solid lg:border-textPrimary">
                     <MegaMenu />
                     <div class="nav-action ml-auto">
-                        <NuxtLink to="/user/login" class="hidden lg:flex guess items-center justify-center cursor-pointer">
+                        <NuxtLink v-if="!token" to="/user/login" class="hidden lg:flex guess items-center justify-center cursor-pointer">
                             <span class="text-login text-xs mr-2 font-medium text-textPrimary">Login</span>
                             <span class="icon">
                                 <svg width="24" height="30" viewBox="0 0 24 30" fill="none"
@@ -40,16 +40,22 @@
                             </span>
                         </NuxtLink>
                         <!-- đã đăng nhập -->
-                        <!-- <NuxtLink to="/user/login" class="hidden lg:flex guess items-center justify-center cursor-pointer">
-                            <span class="text-login text-xs mr-2 font-medium text-textPrimary">MyPage</span>
-                            <span class="icon">
-                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="15" cy="15" r="14" fill="#E5F3FD" stroke="#1B80CA"/>
-                                    <path d="M14.7493 16C8.59308 16 7.04228 22.0313 7.00086 25.656C6.99537 26.1367 7.19147 26.5986 7.57555 26.8877C8.77601 27.7911 11.2422 29 14.7493 29C18.1914 29 20.8618 27.8355 22.2639 26.9382C22.7526 26.6255 23.0078 26.0679 22.9653 25.4892C22.6982 21.8496 20.812 16 14.7493 16Z" fill="white" stroke="#1B80CA" stroke-linecap="round"/>
-                                    <circle cx="15" cy="11" r="6" fill="white" stroke="#1B80CA"/>
-                                </svg>
-                            </span>
-                        </NuxtLink> -->
+                        <div class="relative auth-nav" v-else>
+                            <div @click="authAction = !authAction" class="relative hidden lg:flex guess items-center justify-center cursor-pointer">
+                                <span class="text-login text-xs mr-2 font-medium text-textPrimary">MyPage</span>
+                                <span class="icon">
+                                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="15" cy="15" r="14" fill="#E5F3FD" stroke="#1B80CA"/>
+                                        <path d="M14.7493 16C8.59308 16 7.04228 22.0313 7.00086 25.656C6.99537 26.1367 7.19147 26.5986 7.57555 26.8877C8.77601 27.7911 11.2422 29 14.7493 29C18.1914 29 20.8618 27.8355 22.2639 26.9382C22.7526 26.6255 23.0078 26.0679 22.9653 25.4892C22.6982 21.8496 20.812 16 14.7493 16Z" fill="white" stroke="#1B80CA" stroke-linecap="round"/>
+                                        <circle cx="15" cy="11" r="6" fill="white" stroke="#1B80CA"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="box-action z-20 transition-all absolute top-full left-0 py-4 w-40 bg-white border border-solid border-textPrimary rounded-xl">
+                                <NuxtLink class="px-4 w-full !no-underline block py-1.5 cursor-pointer hover:bg-primary hover:text-white" to="/profile"><span class="text-sm block w-full text-textPrimary hover:text-white">My page</span></NuxtLink>
+                                <p @click="logout" class="px-4 text-sm mb-0 text-textPrimary py-1.5 cursor-pointer hover:bg-primary hover:text-white">logout</p>
+                            </div>
+                        </div>
                         
                         <client-only>
                             <div class="nav-button" @click="toggleNav"><span></span></div>
@@ -67,10 +73,17 @@
     const isSticky = ref(false);
     const isScroll = ref(false);
     const lastScrollPosition = ref(0);
-    const initHeight = ref(true)
+    const initHeight = ref(true);
+    const authAction = ref(false);
+
+    const userStore = useUserStore()
 
     const toggleNav = () => {
         navopen.value = !navopen.value
+    }
+
+    const logout = () => {
+        userStore.userLogout()
     }
 
     const handleScroll = () => {
@@ -96,6 +109,8 @@
     onBeforeUnmount(() => {
       window.removeEventListener('scroll', handleScroll);
     });
+
+    const token = useCookie('token')
 </script>
 
 <style scoped>
@@ -104,6 +119,20 @@
         background-color: white;
         box-shadow: 0 1px 5px #b3b3b3;
         transition: transform .4s ease-in-out, opacity .4s ease-in-out, background-color .4s ease-in-out;
+    }
+
+    .box-action {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all .3s ease;
+    }
+
+    .auth-nav:hover .box-action{
+        display: block;
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
     }
 
     .headerScroll {
@@ -212,5 +241,9 @@
 
     .headerSticky .menu__wrap {
         border-color: white;
+    }
+
+    .box-action {
+        box-shadow: 2px 1px 5px #5d5b5b;
     }
 </style>
